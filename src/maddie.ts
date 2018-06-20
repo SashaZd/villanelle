@@ -39,6 +39,7 @@ addLocation(BATHROOM, [MAIN_AREA, FEM_BEDROOM, MALE_BEDROOM]);
 
 // agents
 var Caleb = addAgent("Caleb");
+var Quinn = addAgent("Quinn");
 
 // items
 var wires1 = addItem("wires1");
@@ -50,6 +51,10 @@ setItemVariable(wires2, "currentLocation", MONITORING_ROOM);
 // // variables
 setAgentVariable(Caleb, "currentLocation", COCKPIT);
 var wiresCollected = setVariable("wiresCollected", 0);
+
+//Quinn
+setAgentVariable(Quinn, "currentLocation", DOCTORS_OFFICE);
+
 
 // Player
 var playerLocation = setVariable("playerLocation", MAIN_AREA);
@@ -88,9 +93,13 @@ let chooseFEM_BEDROOM = action(() => getVariable("randNumber") == 9, () => setVa
 let chooseMALE_BEDROOM = action(() => getVariable("randNumber") == 10, () => setVariable("destination", MALE_BEDROOM), 0);
 let chooseBATHROOM = action(() => getVariable("randNumber") == 11, () => setVariable("destination", BATHROOM), 0);
 
+let atDestinationAgent = function(agentName){
+	return () => getVariable("destination") == getAgentVariable(agentName, "currentLocation");
+}
 
-let atDestination: Precondition = () => getVariable("destination") == getAgentVariable(Caleb, "currentLocation");
-let setDestinationPrecond: Precondition = () => isVariableNotSet("destination") || atDestination();
+
+let atDestinationCaleb: Precondition = atDestinationAgent(Caleb)
+let setDestinationCalebPrecond: Precondition = () => isVariableNotSet("destination") || atDestinationCaleb();
 
 // // create behavior trees
 let setNextDestination = sequence([
@@ -111,15 +120,22 @@ let setNextDestination = sequence([
 	])
 ]);
 
-let gotoNextLocation = action(
-	() => true,
-	() => {
-		setAgentVariable(Caleb, "currentLocation", getNextLocation(getAgentVariable(Caleb, "currentLocation"), getVariable("destination")));
-		console.log("Caleb is at: " + getAgentVariable(Caleb, "currentLocation"));
-		// console.log("Hello: " + getAgentVariable(Caleb, 'currentLocation') == getItemVariable(wires1, "currentLocation"));
-	},
-	0
-);
+let gotoNextLocationAgent = function(agentName){
+	return  action(
+		() => true,
+		() => {
+			setAgentVariable(agentName, "currentLocation", getNextLocation(getAgentVariable(agentName, "currentLocation"), getVariable("destination")));
+			console.log(agentName + " is at: " + getAgentVariable(agentName, "currentLocation"));
+			// console.log("Hello: " + getAgentVariable(Caleb, 'currentLocation') == getItemVariable(wires1, "currentLocation"));
+		},
+		0
+	);
+}
+
+
+let gotoNextLocationCaleb = gotoNextLocationAgent(Caleb);
+let gotoNextLocationQuinn = gotoNextLocationAgent(Quinn);
+
 
 let lastSeenByAgent = function(agentName){
 	return sequence([
@@ -143,7 +159,7 @@ let lastSeenByAgent = function(agentName){
 					() => getAgentVariable(agentName, 'currentLocation') == getItemVariable(wires2, "currentLocation"),
 					//effect
 					() => {
-						console.log("Caleb sees - Item: wires2 | Location: "+getAgentVariable(agentName, 'currentLocation'));
+						console.log(agentName + "sees - Item: wires2 | Location: "+getAgentVariable(agentName, 'currentLocation'));
 						setAgentVariable(agentName, "lastSeen:wires2",  getAgentVariable(agentName, 'currentLocation'))
 					},
 					//time taken
@@ -157,7 +173,7 @@ let lastSeenByAgent = function(agentName){
 					() => getAgentVariable(agentName, 'currentLocation') == getVariable("playerLocation"),
 					//effect
 					() => {
-						console.log("Caleb sees - Person: Player | Location: "+getAgentVariable(agentName, 'currentLocation'));
+						console.log(agentName + "sees - Person: Player | Location: "+getAgentVariable(agentName, 'currentLocation'));
 						setAgentVariable(agentName, "lastSeen:player",  getAgentVariable(agentName, 'currentLocation'))
 					},
 					//time taken
@@ -171,6 +187,7 @@ let lastSeenByAgent = function(agentName){
 
 
 let lastSeenByCaleb = lastSeenByAgent(Caleb)
+let lastSeenByQuinn = lastSeenByAgent(Quinn)
 
 
 // let findItem = action(
@@ -216,11 +233,11 @@ let lastSeenByCaleb = lastSeenByAgent(Caleb)
 
 let search = sequence([
 		selector([
-			guard(setDestinationPrecond, setNextDestination),
+			guard(setDestinationCalebPrecond, setNextDestination),
 			action(() => true, () => {
 			},0)
 		]),
-		gotoNextLocation,
+		gotoNextLocationCaleb,
 	]);
 
 
@@ -240,8 +257,16 @@ let CalebBT = sequence([
 	])
 ]);
 
+let QuinnBT = sequence([
+	lastSeenByQuinn,
+	sequence([
+		search, lastSeenByQuinn
+	])
+]);
+
 // //attach behaviour trees to agents
 attachTreeToAgent(Caleb, CalebBT);
+attachTreeToAgent(Quinn, QuinnBT);
 
 // // 3. Construct story
 // // create user actions
@@ -389,12 +414,14 @@ var spaceshipImage = new Image();
 spaceshipImage.onload = render;
 var playerImage = new Image();
 var calebImage = new Image();
+var quinnImage = new Image();
 
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	context.drawImage(spaceshipImage, displayPanel.x, displayPanel.y, 500, 500);
 	displayPlayer();
 	displayCaleb();
+	displayQuinn();
 	displayTextAndActions();
 }
 
@@ -423,9 +450,15 @@ function displayCaleb() {
 	context.drawImage(calebImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 25, 25);
 }
 
+function displayQuinn() {
+	var currLocation = getAgentVariable(Quinn, "currentLocation");
+	context.drawImage(quinnImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 25, 25);
+}
+
 spaceshipImage.src = "../images/finalized_ship_map_digi.png";
 playerImage.src = "../images/commander_icon.png";
 calebImage.src = "../images/caleb_icon.png";
+quinnImage.src = "../images/Quinn.png";
 
 var currentSelection;
 var yOffset = actionsPanel.y + 25;
