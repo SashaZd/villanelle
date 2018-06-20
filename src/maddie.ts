@@ -40,6 +40,9 @@ addLocation(BATHROOM, [MAIN_AREA, FEM_BEDROOM, MALE_BEDROOM]);
 // agents
 var Caleb = addAgent("Caleb");
 var Quinn = addAgent("Quinn");
+var Mark = addAgent("Mark");
+var Eddie = addAgent("Eddie");
+var Beatrice = addAgent("Beatrice");
 
 // items
 var wires1 = addItem("wires1");
@@ -55,6 +58,14 @@ var wiresCollected = setVariable("wiresCollected", 0);
 //Quinn
 setAgentVariable(Quinn, "currentLocation", DOCTORS_OFFICE);
 
+//Mark
+setAgentVariable(Mark, "currentLocation", TRANSPORT_ROOM);
+
+//Eddie
+setAgentVariable(Eddie, "currentLocation", STORAGE);
+
+//Beatrice
+setAgentVariable(Beatrice, "currentLocation", ENGINES);
 
 // Player
 var playerLocation = setVariable("playerLocation", MAIN_AREA);
@@ -135,6 +146,9 @@ let gotoNextLocationAgent = function(agentName){
 
 let gotoNextLocationCaleb = gotoNextLocationAgent(Caleb);
 let gotoNextLocationQuinn = gotoNextLocationAgent(Quinn);
+let gotoNextLocationMark = gotoNextLocationAgent(Mark);
+let gotoNextLocationEddie = gotoNextLocationAgent(Eddie);
+let gotoNextLocationBeatrice = gotoNextLocationAgent(Beatrice);
 
 
 let lastSeenByAgent = function(agentName){
@@ -188,6 +202,9 @@ let lastSeenByAgent = function(agentName){
 
 let lastSeenByCaleb = lastSeenByAgent(Caleb)
 let lastSeenByQuinn = lastSeenByAgent(Quinn)
+let lastSeenByMark = lastSeenByAgent(Mark)
+let lastSeenByEddie = lastSeenByAgent(Eddie)
+let lastSeenByBeatrice = lastSeenByAgent(Beatrice)
 
 
 // let findItem = action(
@@ -264,9 +281,33 @@ let QuinnBT = sequence([
 	])
 ]);
 
+let MarkBT = sequence([
+	lastSeenByMark,
+	sequence([
+		search, lastSeenByMark
+	])
+]);
+
+let EddieBT = sequence([
+	lastSeenByEddie,
+	sequence([
+		search, lastSeenByEddie
+	])
+]);
+
+let BeatriceBT = sequence([
+	lastSeenByBeatrice,
+	sequence([
+		search, lastSeenByBeatrice
+	])
+]);
+
 // //attach behaviour trees to agents
 attachTreeToAgent(Caleb, CalebBT);
 attachTreeToAgent(Quinn, QuinnBT);
+attachTreeToAgent(Mark, MarkBT);
+attachTreeToAgent(Eddie, EddieBT);
+attachTreeToAgent(Beatrice, BeatriceBT);
 
 // // 3. Construct story
 // // create user actions
@@ -415,6 +456,9 @@ spaceshipImage.onload = render;
 var playerImage = new Image();
 var calebImage = new Image();
 var quinnImage = new Image();
+var markImage = new Image();
+var eddieImage = new Image();
+var beatriceImage = new Image();
 
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
@@ -422,17 +466,20 @@ function render() {
 	displayPlayer();
 	displayCaleb();
 	displayQuinn();
+	displayMark();
+	displayEddie();
+	displayBeatrice();
 	displayTextAndActions();
 }
 
 var mapPositions = {
-	"ENGINES": {x: 115, y: 135},
-	"COCKPIT": {x: 393, y: 243},
-	"STORAGE": {x: 260, y: 150},
+	"ENGINES": {x: 115, y: 133},
+	"COCKPIT": {x: 393, y: 238},
+	"STORAGE": {x: 260, y: 147},
 	"DOCTORS OFFICE": {x: 302, y: 250},
 	"MAIN AREA": {x: 165, y: 250},
-	"ESCAPE POD": {x: 105, y: 360},
-	"TRANSPORT ROOM": {x: 228, y: 347},
+	"ESCAPE POD": {x: 102, y: 357},
+	"TRANSPORT ROOM": {x: 228, y: 343},
 	"MONITORING ROOM": {x: 308, y: 320},
 	"BATHROOM": {x: 24, y: 245},
 	"MALE BEDROOM": {x: 24, y: 325},
@@ -442,12 +489,12 @@ var mapPositions = {
 function displayPlayer() {
 	var currLocation = getVariable(playerLocation);
 	if (!isUndefined(mapPositions[currLocation]))
-		context.drawImage(playerImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 25, 25);
+		context.drawImage(playerImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
 }
 
 function displayCaleb() {
 	var currLocation = getAgentVariable(Caleb, "currentLocation");
-	context.drawImage(calebImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 25, 25);
+	context.drawImage(calebImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
 }
 
 function displayQuinn() {
@@ -455,10 +502,28 @@ function displayQuinn() {
 	context.drawImage(quinnImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 25, 25);
 }
 
+function displayMark() {
+	var currLocation = getAgentVariable(Mark, "currentLocation");
+	context.drawImage(markImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
+}
+
+function displayEddie() {
+	var currLocation = getAgentVariable(Eddie, "currentLocation");
+	context.drawImage(eddieImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
+}
+
+function displayBeatrice() {
+	var currLocation = getAgentVariable(Beatrice, "currentLocation");
+	context.drawImage(beatriceImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
+}
+
 spaceshipImage.src = "../images/finalized_ship_map_digi.png";
-playerImage.src = "../images/commander_icon.png";
-calebImage.src = "../images/caleb_icon.png";
+playerImage.src = "../images/Taylor.png";
+calebImage.src = "../images/Caleb.png";
 quinnImage.src = "../images/Quinn.png";
+markImage.src = "../images/Mark.png";
+eddieImage.src = "../images/Eddie.png";
+beatriceImage.src = "../images/Beatrice.png";
 
 var currentSelection;
 var yOffset = actionsPanel.y + 25;
