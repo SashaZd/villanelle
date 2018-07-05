@@ -32,26 +32,52 @@ scripting_1.addLocation(BATHROOM, [MAIN_AREA, FEM_BEDROOM, MALE_BEDROOM]);
 // agents
 var Caleb = scripting_1.addAgent("Caleb");
 var Quinn = scripting_1.addAgent("Quinn");
+var Mark = scripting_1.addAgent("Mark");
+var Eddie = scripting_1.addAgent("Eddie");
+var Beatrice = scripting_1.addAgent("Beatrice");
 // items
 var wires1 = scripting_1.addItem("wires1");
 var wires2 = scripting_1.addItem("wires2");
-scripting_1.setItemVariable(wires1, "currentLocation", STORAGE);
-scripting_1.setItemVariable(wires2, "currentLocation", MONITORING_ROOM);
-// // variables
-scripting_1.setAgentVariable(Caleb, "currentLocation", COCKPIT);
+wires1.setCurrentLocation(STORAGE);
+wires1.setCurrentLocation(MONITORING_ROOM);
+// setItemVariable(wires1, "currentLocation", STORAGE);
+// setItemVariable(wires2, "currentLocation", MONITORING_ROOM);
 var wiresCollected = scripting_1.setVariable("wiresCollected", 0);
+// // variables
+// setAgentVariable(Caleb, "currentLocation", COCKPIT);
+Caleb.setCurrentLocation(COCKPIT);
+// Maddie: Change all following: 
+// setAgentVariable(Caleb, "currentLocation", COCKPIT); ======> TO
+// Caleb.setCurrentLocation(COCKPIT);
 //Quinn
 scripting_1.setAgentVariable(Quinn, "currentLocation", DOCTORS_OFFICE);
+//Mark
+scripting_1.setAgentVariable(Mark, "currentLocation", TRANSPORT_ROOM);
+//Eddie
+scripting_1.setAgentVariable(Eddie, "currentLocation", STORAGE);
+//Beatrice
+scripting_1.setAgentVariable(Beatrice, "currentLocation", ENGINES);
 // Player
 var playerLocation = scripting_1.setVariable("playerLocation", MAIN_AREA);
 var wiresCollected = scripting_1.setVariable("wiresCollected", 0);
 // Knowledge for Caleb 
-scripting_1.setAgentVariable(Caleb, "lastSeen:wires1", UNKNOWN);
+// Maddie: Change all following
+// setAgentVariable(Caleb, "lastSeen:wires1", UNKNOWN) ===> To 
+// Caleb.setLastSawItemAtLocation(wires1, UNKNOWN);
+Caleb.setLastSawItemAtLocation(wires1, UNKNOWN);
+// setAgentVariable(Caleb, "lastSeen:wires1", UNKNOWN)
 scripting_1.setAgentVariable(Caleb, "lastSeen:wires2", UNKNOWN);
 scripting_1.setAgentVariable(Caleb, "lastSeen:player", UNKNOWN);
 // // 2. Define BTs
 // // create ground actions
+// Todo from here
+// function function_name(argument) {
+// 	// body...
+// }
 var setRandNumber = scripting_1.action(function () { return true; }, function () { return scripting_1.setVariable("randNumber", scripting_1.getRandNumber(1, 11)); }, 0);
+// function chooseDestinationForAgent(agent, destinationNumber=getVariable("randNumber")) {
+// 	// body...
+// }
 var chooseENGINES = scripting_1.action(function () { return scripting_1.getVariable("randNumber") == 1; }, function () { return scripting_1.setVariable("destination", ENGINES); }, 0);
 var chooseSTORAGE = scripting_1.action(function () { return scripting_1.getVariable("randNumber") == 2; }, function () { return scripting_1.setVariable("destination", STORAGE); }, 0);
 var chooseDOCTORS_OFFICE = scripting_1.action(function () { return scripting_1.getVariable("randNumber") == 3; }, function () { return scripting_1.setVariable("destination", DOCTORS_OFFICE); }, 0);
@@ -64,7 +90,7 @@ var chooseFEM_BEDROOM = scripting_1.action(function () { return scripting_1.getV
 var chooseMALE_BEDROOM = scripting_1.action(function () { return scripting_1.getVariable("randNumber") == 10; }, function () { return scripting_1.setVariable("destination", MALE_BEDROOM); }, 0);
 var chooseBATHROOM = scripting_1.action(function () { return scripting_1.getVariable("randNumber") == 11; }, function () { return scripting_1.setVariable("destination", BATHROOM); }, 0);
 var atDestinationAgent = function (agentName) {
-    return function () { return scripting_1.getVariable("destination") == scripting_1.getAgentVariable(agentName, "currentLocation"); };
+    return function () { return scripting_1.getAgentVariable(agentName, "destination") == scripting_1.getAgentVariable(agentName, "currentLocation"); };
 };
 var atDestinationCaleb = atDestinationAgent(Caleb);
 var setDestinationCalebPrecond = function () { return scripting_1.isVariableNotSet("destination") || atDestinationCaleb(); };
@@ -94,16 +120,22 @@ var gotoNextLocationAgent = function (agentName) {
 };
 var gotoNextLocationCaleb = gotoNextLocationAgent(Caleb);
 var gotoNextLocationQuinn = gotoNextLocationAgent(Quinn);
-var lastSeenByAgent = function (agentName) {
+var gotoNextLocationMark = gotoNextLocationAgent(Mark);
+var gotoNextLocationEddie = gotoNextLocationAgent(Eddie);
+var gotoNextLocationBeatrice = gotoNextLocationAgent(Beatrice);
+var lastSeenByAgent = function (agent) {
     return scripting_1.sequence([
         scripting_1.selector([
             scripting_1.action(
             //precondition
-            function () { return scripting_1.getAgentVariable(agentName, 'currentLocation') == scripting_1.getItemVariable(wires1, "currentLocation"); }, 
+            function () { return agent.currentLocation == wires1.currentLocation; }, 
+            // () => getAgentVariable(agent, 'currentLocation') == getItemVariable(wires1, "currentLocation"),
             //effect
             function () {
-                console.log(agentName + " sees - Item: wires1 | Location: " + scripting_1.getAgentVariable(agentName, 'currentLocation'));
-                scripting_1.setAgentVariable(agentName, "lastSeen:wires1", scripting_1.getAgentVariable(agentName, 'currentLocation'));
+                console.log(agent + " sees - Item: wires1 | Location: " + agent.currentLocation);
+                // console.log(agentName + " sees - Item: wires1 | Location: "+ getAgentVariable(agentName, 'currentLocation'));
+                // setAgentVariable(agentName, "lastSeen:wires1",  getAgentVariable(agentName, 'currentLocation'))
+                agent.setLastSawItemAtLocation(wires1, agent.currentLocation);
             }, 
             //time taken
             0),
@@ -112,11 +144,14 @@ var lastSeenByAgent = function (agentName) {
         scripting_1.selector([
             scripting_1.action(
             //precondition
-            function () { return scripting_1.getAgentVariable(agentName, 'currentLocation') == scripting_1.getItemVariable(wires2, "currentLocation"); }, 
+            function () { return agent.currentLocation == wires2.currentLocation; }, 
+            // () => getAgentVariable(agentName, 'currentLocation') == getItemVariable(wires2, "currentLocation"),
             //effect
             function () {
-                console.log(agentName + "sees - Item: wires2 | Location: " + scripting_1.getAgentVariable(agentName, 'currentLocation'));
-                scripting_1.setAgentVariable(agentName, "lastSeen:wires2", scripting_1.getAgentVariable(agentName, 'currentLocation'));
+                console.log(agent + " sees - Item: wires2 | Location: " + agent.currentLocation);
+                // console.log(agentName + "sees - Item: wires2 | Location: "+getAgentVariable(agentName, 'currentLocation'));
+                agent.setLastSawItemAtLocation(wires2, agent.currentLocation);
+                // setAgentVariable(agentName, "lastSeen:wires2",  getAgentVariable(agentName, 'currentLocation'))
             }, 
             //time taken
             0),
@@ -125,11 +160,15 @@ var lastSeenByAgent = function (agentName) {
         scripting_1.selector([
             scripting_1.action(
             //precondition
-            function () { return scripting_1.getAgentVariable(agentName, 'currentLocation') == scripting_1.getVariable("playerLocation"); }, 
+            function () { return agent.currentLocation == scripting_1.getVariable("playerLocation"); }, 
+            // () => getAgentVariable(agentName, 'currentLocation') == getVariable("playerLocation"),
             //effect
             function () {
-                console.log(agentName + "sees - Person: Player | Location: " + scripting_1.getAgentVariable(agentName, 'currentLocation'));
-                scripting_1.setAgentVariable(agentName, "lastSeen:player", scripting_1.getAgentVariable(agentName, 'currentLocation'));
+                console.log(agent + " sees - Person: Player | Location: " + agent.currentLocation);
+                // console.log(agentName + "sees - Person: Player | Location: "+getAgentVariable(agentName, 'currentLocation'));
+                // agent.setLastSawItemAtLocation(wires1, agent.currentLocation);
+                agent.setLastSawPersonAtLocation('player', agent.currentLocation);
+                // setAgentVariable(agentName, "lastSeen:player",  getAgentVariable(agentName, 'currentLocation'))
             }, 
             //time taken
             0),
@@ -139,6 +178,9 @@ var lastSeenByAgent = function (agentName) {
 };
 var lastSeenByCaleb = lastSeenByAgent(Caleb);
 var lastSeenByQuinn = lastSeenByAgent(Quinn);
+var lastSeenByMark = lastSeenByAgent(Mark);
+var lastSeenByEddie = lastSeenByAgent(Eddie);
+var lastSeenByBeatrice = lastSeenByAgent(Beatrice);
 // let findItem = action(
 //     () => getAgentVariable(Caleb, 'currentLocation') == getItemVariable(wires1, "currentLocation"),
 //     () => {
@@ -202,9 +244,30 @@ var QuinnBT = scripting_1.sequence([
         search, lastSeenByQuinn
     ])
 ]);
+var MarkBT = scripting_1.sequence([
+    lastSeenByMark,
+    scripting_1.sequence([
+        search, lastSeenByMark
+    ])
+]);
+var EddieBT = scripting_1.sequence([
+    lastSeenByEddie,
+    scripting_1.sequence([
+        search, lastSeenByEddie
+    ])
+]);
+var BeatriceBT = scripting_1.sequence([
+    lastSeenByBeatrice,
+    scripting_1.sequence([
+        search, lastSeenByBeatrice
+    ])
+]);
 // //attach behaviour trees to agents
 scripting_1.attachTreeToAgent(Caleb, CalebBT);
 scripting_1.attachTreeToAgent(Quinn, QuinnBT);
+scripting_1.attachTreeToAgent(Mark, MarkBT);
+scripting_1.attachTreeToAgent(Eddie, EddieBT);
+scripting_1.attachTreeToAgent(Beatrice, BeatriceBT);
 // // 3. Construct story
 // // create user actions
 var startStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == MAIN_AREA; }, scripting_1.sequence([
@@ -313,22 +376,28 @@ spaceshipImage.onload = render;
 var playerImage = new Image();
 var calebImage = new Image();
 var quinnImage = new Image();
+var markImage = new Image();
+var eddieImage = new Image();
+var beatriceImage = new Image();
 function render() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.drawImage(spaceshipImage, displayPanel.x, displayPanel.y, 500, 500);
     displayPlayer();
     displayCaleb();
     displayQuinn();
+    displayMark();
+    displayEddie();
+    displayBeatrice();
     displayTextAndActions();
 }
 var mapPositions = {
-    "ENGINES": { x: 115, y: 135 },
-    "COCKPIT": { x: 393, y: 243 },
-    "STORAGE": { x: 260, y: 150 },
+    "ENGINES": { x: 115, y: 133 },
+    "COCKPIT": { x: 393, y: 238 },
+    "STORAGE": { x: 260, y: 147 },
     "DOCTORS OFFICE": { x: 302, y: 250 },
     "MAIN AREA": { x: 165, y: 250 },
-    "ESCAPE POD": { x: 105, y: 360 },
-    "TRANSPORT ROOM": { x: 228, y: 347 },
+    "ESCAPE POD": { x: 102, y: 357 },
+    "TRANSPORT ROOM": { x: 228, y: 343 },
     "MONITORING ROOM": { x: 308, y: 320 },
     "BATHROOM": { x: 24, y: 245 },
     "MALE BEDROOM": { x: 24, y: 325 },
@@ -337,20 +406,35 @@ var mapPositions = {
 function displayPlayer() {
     var currLocation = scripting_1.getVariable(playerLocation);
     if (!util_1.isUndefined(mapPositions[currLocation]))
-        context.drawImage(playerImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 25, 25);
+        context.drawImage(playerImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
 }
 function displayCaleb() {
     var currLocation = scripting_1.getAgentVariable(Caleb, "currentLocation");
-    context.drawImage(calebImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 25, 25);
+    context.drawImage(calebImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
 }
 function displayQuinn() {
     var currLocation = scripting_1.getAgentVariable(Quinn, "currentLocation");
     context.drawImage(quinnImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 25, 25);
 }
+function displayMark() {
+    var currLocation = scripting_1.getAgentVariable(Mark, "currentLocation");
+    context.drawImage(markImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
+}
+function displayEddie() {
+    var currLocation = scripting_1.getAgentVariable(Eddie, "currentLocation");
+    context.drawImage(eddieImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
+}
+function displayBeatrice() {
+    var currLocation = scripting_1.getAgentVariable(Beatrice, "currentLocation");
+    context.drawImage(beatriceImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
+}
 spaceshipImage.src = "../images/finalized_ship_map_digi.png";
-playerImage.src = "../images/commander_icon.png";
-calebImage.src = "../images/caleb_icon.png";
+playerImage.src = "../images/Taylor.png";
+calebImage.src = "../images/Caleb.png";
 quinnImage.src = "../images/Quinn.png";
+markImage.src = "../images/Mark.png";
+eddieImage.src = "../images/Eddie.png";
+beatriceImage.src = "../images/Beatrice.png";
 var currentSelection;
 var yOffset = actionsPanel.y + 25;
 var yOffsetIncrement = 25;
