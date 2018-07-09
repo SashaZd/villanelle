@@ -379,19 +379,43 @@ attachTreeToAgent(Beatrice, BeatriceBT);
 // // 3. Construct story
 // // create user actions
 
+
+setVariable("theStart",0);
+
 var startStateBT = guard(() => getVariable(playerLocation) == MAIN_AREA,
-	sequence([
-			displayDescriptionAction("You enter the ship's main area."),
-			addUserAction("Go forward to enter the engine room.", () => setVariable(playerLocation, ENGINES)),
-			addUserAction("Go east to enter the doctor's office.", () => setVariable(playerLocation, DOCTORS_OFFICE)),
-			addUserAction("Go west to enter the females' bedroom.", () => setVariable(playerLocation, FEM_BEDROOM)),
-			addUserAction("Go west to enter the bathroom.", () => setVariable(playerLocation, BATHROOM)),
-			addUserAction("Go west to enter the males' bedroom.", () => setVariable(playerLocation, MALE_BEDROOM)),
-			addUserAction("Go south to enter the escape pod.", () => setVariable(playerLocation, ESCAPE_POD)),
-			addUserAction("Go into the transport room.", () => setVariable(playerLocation, TRANSPORT_ROOM)),
-		]
-	));
+    sequence([
+            displayDescriptionAction("You enter the ship's main area."),
+            selector([
+                guard(() => getVariable("theStart") == 0,
+                    sequence([
+                        displayDescriptionAction("Help text on."),
+                        addUserAction("Next!", () => {
+                            setVariable("theStart", 1);
+                        })
+                    ])),
+
+               	guard(() => getVariable("theStart") == 1,
+                    sequence([
+                        displayDescriptionAction("Help text off...."),
+                        addUserAction("Go forward to enter the engine room.", () => setVariable(playerLocation, ENGINES)),
+						addUserAction("Go east to enter the doctor's office.", () => setVariable(playerLocation, DOCTORS_OFFICE)),
+						addUserAction("Go west to enter the females' bedroom.", () => setVariable(playerLocation, FEM_BEDROOM)),
+						addUserAction("Go west to enter the bathroom.", () => setVariable(playerLocation, BATHROOM)),
+						addUserAction("Go west to enter the males' bedroom.", () => setVariable(playerLocation, MALE_BEDROOM)),
+						addUserAction("Go south to enter the escape pod.", () => setVariable(playerLocation, ESCAPE_POD)),
+						addUserAction("Go into the transport room.", () => setVariable(playerLocation, TRANSPORT_ROOM)),
+                    ])),
+
+               	// Optional
+                displayDescriptionAction("Otherwise show this...")
+            ]),
+
+            // Default Show
+            
+        ]
+    ));
 addUserInteractionTree(startStateBT);
+
 var bcStateBT = guard(() => getVariable(playerLocation) == ENGINES,
 	sequence([
 			displayDescriptionAction("You enter the engine room."),
