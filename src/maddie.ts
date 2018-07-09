@@ -58,37 +58,37 @@ wires1.setCurrentLocation(MONITORING_ROOM);
 var wiresCollected = setVariable("wiresCollected", 0);
 
 // // variables
+//Caleb
 // setAgentVariable(Caleb, "currentLocation", COCKPIT);
 Caleb.setCurrentLocation(COCKPIT);
 
-// Maddie: Change all following for any agents
-// setAgentVariable(Caleb, "currentLocation", COCKPIT); ======> TO
-// Caleb.setCurrentLocation(COCKPIT);
-
-
 //Quinn
-setAgentVariable(Quinn, "currentLocation", DOCTORS_OFFICE);
+// setAgentVariable(Quinn, "currentLocation", DOCTORS_OFFICE);
+Quinn.setCurrentLocation(DOCTORS_OFFICE);
 
 //Mark
-setAgentVariable(Mark, "currentLocation", TRANSPORT_ROOM);
+// setAgentVariable(Mark, "currentLocation", TRANSPORT_ROOM);
+Mark.setCurrentLocation(TRANSPORT_ROOM);
 
 //Eddie
-setAgentVariable(Eddie, "currentLocation", STORAGE);
+// setAgentVariable(Eddie, "currentLocation", STORAGE);
+Eddie.setCurrentLocation(STORAGE);
 
 //Beatrice
-setAgentVariable(Beatrice, "currentLocation", ENGINES);
+// setAgentVariable(Beatrice, "currentLocation", ENGINES);
+Beatrice.setCurrentLocation(ENGINES);
 
 // Player
 var playerLocation = setVariable("playerLocation", MAIN_AREA);
 var wiresCollected = setVariable("wiresCollected", 0);
 
 
-// Knowledge for Caleb 
-// Maddie: Change all following for any agengs
-// setAgentVariable(Caleb, "lastSeen:wires1", UNKNOWN) ===> To 
-// Caleb.setLastSawItemAtLocation(wires1, UNKNOWN);
-
+// Knowledge 
 Caleb.setLastSawItemAtLocation(wires1, UNKNOWN);
+Quinn.setLastSawItemAtLocation(wires1, UNKNOWN);
+Mark.setLastSawItemAtLocation(wires1, UNKNOWN);
+Eddie.setLastSawItemAtLocation(wires1, UNKNOWN);
+Beatrice.setLastSawItemAtLocation(wires1, UNKNOWN);
 
 // setAgentVariable(Caleb, "lastSeen:wires1", UNKNOWN)
 setAgentVariable(Caleb, "lastSeen:wires2", UNKNOWN)
@@ -541,27 +541,27 @@ function displayPlayer() {
 }
 
 function displayCaleb() {
-	var currLocation = getAgentVariable(Caleb, "currentLocation");
+	var currLocation = Caleb.currentLocation;
 	context.drawImage(calebImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 50, 50);
 }
 
 function displayQuinn() {
-	var currLocation = getAgentVariable(Quinn, "currentLocation");
+	var currLocation = Quinn.currentLocation;
 	context.drawImage(quinnImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 50, 50);
 }
 
 function displayMark() {
-	var currLocation = getAgentVariable(Mark, "currentLocation");
+	var currLocation = Mark.currentLocation;
 	context.drawImage(markImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 50, 50);
 }
 
 function displayEddie() {
-	var currLocation = getAgentVariable(Eddie, "currentLocation");
+	var currLocation = Eddie.currentLocation;
 	context.drawImage(eddieImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 50, 50);
 }
 
 function displayBeatrice() {
-	var currLocation = getAgentVariable(Beatrice, "currentLocation");
+	var currLocation = Beatrice.currentLocation;
 	context.drawImage(beatriceImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 50, 50);
 }
 
