@@ -444,7 +444,7 @@ initialize();
 var userInteractionObject = getUserInteractionObject();
 
 // //RENDERING-----
-var displayPanel = {x: 500, y: 0};
+var displayPanel = {x: 250, y: 0};
 var textPanel = {x: 500, y: 501};
 var actionsPanel = {x: 520, y: 550};
 
@@ -462,7 +462,7 @@ var beatriceImage = new Image();
 
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	context.drawImage(spaceshipImage, displayPanel.x, displayPanel.y, 500, 500);
+	context.drawImage(spaceshipImage, displayPanel.x, displayPanel.y, 1000, 500);
 	displayPlayer();
 	displayCaleb();
 	displayQuinn();
@@ -473,51 +473,51 @@ function render() {
 }
 
 var mapPositions = {
-	"ENGINES": {x: 115, y: 133},
-	"COCKPIT": {x: 393, y: 238},
-	"STORAGE": {x: 260, y: 147},
-	"DOCTORS OFFICE": {x: 302, y: 250},
-	"MAIN AREA": {x: 165, y: 250},
-	"ESCAPE POD": {x: 102, y: 357},
-	"TRANSPORT ROOM": {x: 228, y: 343},
-	"MONITORING ROOM": {x: 308, y: 320},
-	"BATHROOM": {x: 24, y: 245},
-	"MALE BEDROOM": {x: 24, y: 325},
-	"FEM BEDROOM": {x: 24, y: 170}
+	"ENGINES": {x: 275, y: 110},
+	"COCKPIT": {x: 860, y: 230},
+	"STORAGE": {x: 545, y: 110},
+	"DOCTORS OFFICE": {x: 725, y: 350},
+	"MAIN AREA": {x: 465, y: 240},
+	"ESCAPE POD": {x: 224, y: 408},
+	"TRANSPORT ROOM": {x: 370, y: 360},
+	"MONITORING ROOM": {x: 535, y: 360},
+	"BATHROOM": {x: 85, y: 240},
+	"MALE BEDROOM": {x: 85, y: 330},
+	"FEM BEDROOM": {x: 85, y: 150}
 };
 
 function displayPlayer() {
 	var currLocation = getVariable(playerLocation);
 	if (!isUndefined(mapPositions[currLocation]))
-		context.drawImage(playerImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
+		context.drawImage(playerImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 50, 50);
 }
 
 function displayCaleb() {
 	var currLocation = getAgentVariable(Caleb, "currentLocation");
-	context.drawImage(calebImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
+	context.drawImage(calebImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 50, 50);
 }
 
 function displayQuinn() {
 	var currLocation = getAgentVariable(Quinn, "currentLocation");
-	context.drawImage(quinnImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 25, 25);
+	context.drawImage(quinnImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 50, 50);
 }
 
 function displayMark() {
 	var currLocation = getAgentVariable(Mark, "currentLocation");
-	context.drawImage(markImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
+	context.drawImage(markImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 50, 50);
 }
 
 function displayEddie() {
 	var currLocation = getAgentVariable(Eddie, "currentLocation");
-	context.drawImage(eddieImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
+	context.drawImage(eddieImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 50, 50);
 }
 
 function displayBeatrice() {
 	var currLocation = getAgentVariable(Beatrice, "currentLocation");
-	context.drawImage(beatriceImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 30, 30);
+	context.drawImage(beatriceImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 50, 50);
 }
 
-spaceshipImage.src = "../images/finalized_ship_map_digi.png";
+spaceshipImage.src = "../images/ship_maybe.png";
 playerImage.src = "../images/Taylor.png";
 calebImage.src = "../images/Caleb.png";
 quinnImage.src = "../images/Quinn.png";
