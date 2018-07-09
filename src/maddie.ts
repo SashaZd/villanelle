@@ -4,7 +4,7 @@ import {
 	getRandNumber, getVariable, sequence, selector, execute, Precondition, getAgentVariable, neg_guard, guard,
 	isVariableNotSet, displayDescriptionAction, addUserAction, addUserInteractionTree, initialize,
 	getUserInteractionObject, executeUserAction, worldTick, attachTreeToAgent, setItemVariable, getItemVariable,
-	displayActionEffectText, areAdjacent, addUserActionTree
+	displayActionEffectText, areAdjacent, addUserActionTree, Agent, Item
 } from "./scripting";
 import {isUndefined} from "typescript-collections/dist/lib/util";
 
@@ -48,12 +48,23 @@ var Beatrice = addAgent("Beatrice");
 var wires1 = addItem("wires1");
 var wires2 = addItem("wires2");
 
-setItemVariable(wires1, "currentLocation", STORAGE);
-setItemVariable(wires2, "currentLocation", MONITORING_ROOM);
+
+wires1.setCurrentLocation(STORAGE);
+wires1.setCurrentLocation(MONITORING_ROOM);
+
+// setItemVariable(wires1, "currentLocation", STORAGE);
+// setItemVariable(wires2, "currentLocation", MONITORING_ROOM);
+
+var wiresCollected = setVariable("wiresCollected", 0);
 
 // // variables
-setAgentVariable(Caleb, "currentLocation", COCKPIT);
-var wiresCollected = setVariable("wiresCollected", 0);
+// setAgentVariable(Caleb, "currentLocation", COCKPIT);
+Caleb.setCurrentLocation(COCKPIT);
+
+// Maddie: Change all following for any agents
+// setAgentVariable(Caleb, "currentLocation", COCKPIT); ======> TO
+// Caleb.setCurrentLocation(COCKPIT);
+
 
 //Quinn
 setAgentVariable(Quinn, "currentLocation", DOCTORS_OFFICE);
@@ -73,18 +84,36 @@ var wiresCollected = setVariable("wiresCollected", 0);
 
 
 // Knowledge for Caleb 
-setAgentVariable(Caleb, "lastSeen:wires1", UNKNOWN)
+// Maddie: Change all following for any agengs
+// setAgentVariable(Caleb, "lastSeen:wires1", UNKNOWN) ===> To 
+// Caleb.setLastSawItemAtLocation(wires1, UNKNOWN);
+
+Caleb.setLastSawItemAtLocation(wires1, UNKNOWN);
+
+// setAgentVariable(Caleb, "lastSeen:wires1", UNKNOWN)
 setAgentVariable(Caleb, "lastSeen:wires2", UNKNOWN)
 setAgentVariable(Caleb, "lastSeen:player", UNKNOWN)
 
+// Maddie: Change all the following for any items: 
+// getItemVariable(wires1, "currentLocation") ===> To
+// someItem.currentLocation
 
 
+// Maddie: Change all the following for any agents: 
+// getAgentVariable(Caleb, "currentLocation") ===> To
+// Caleb.currentLocation
 
 
 
 
 // // 2. Define BTs
 // // create ground actions
+
+// Todo from here
+// function function_name(argument) {
+// 	// body...
+// }
+
 let setRandNumber = action(
 	() => true,
 	() => setVariable("randNumber", 
@@ -92,6 +121,13 @@ let setRandNumber = action(
 			0
 );
 
+// function chooseDestinationForAgent(agent, destinationNumber=getVariable("randNumber")) {
+// 	// body...
+// }
+
+
+
+// Sasha Todo: Work on using the Agent/Item types for destinations
 let chooseENGINES = action(() => getVariable("randNumber") == 1, () => setVariable("destination", ENGINES), 0);
 let chooseSTORAGE = action(() => getVariable("randNumber") == 2, () => setVariable("destination", STORAGE), 0);
 let chooseDOCTORS_OFFICE = action(() => getVariable("randNumber") == 3, () => setVariable("destination", DOCTORS_OFFICE), 0);
@@ -104,8 +140,10 @@ let chooseFEM_BEDROOM = action(() => getVariable("randNumber") == 9, () => setVa
 let chooseMALE_BEDROOM = action(() => getVariable("randNumber") == 10, () => setVariable("destination", MALE_BEDROOM), 0);
 let chooseBATHROOM = action(() => getVariable("randNumber") == 11, () => setVariable("destination", BATHROOM), 0);
 
+
+
 let atDestinationAgent = function(agentName){
-	return () => getVariable("destination") == getAgentVariable(agentName, "currentLocation");
+	return () => getAgentVariable(agentName, "destination") == getAgentVariable(agentName, "currentLocation");
 }
 
 
@@ -151,16 +189,19 @@ let gotoNextLocationEddie = gotoNextLocationAgent(Eddie);
 let gotoNextLocationBeatrice = gotoNextLocationAgent(Beatrice);
 
 
-let lastSeenByAgent = function(agentName){
+let lastSeenByAgent = function(agent){
 	return sequence([
 		selector([
 			action(
 					//precondition
-					() => getAgentVariable(agentName, 'currentLocation') == getItemVariable(wires1, "currentLocation"),
+					() => agent.currentLocation == wires1.currentLocation,
+					// () => getAgentVariable(agent, 'currentLocation') == getItemVariable(wires1, "currentLocation"),
 					//effect
 					() => {
-						console.log(agentName + " sees - Item: wires1 | Location: "+ getAgentVariable(agentName, 'currentLocation'));
-						setAgentVariable(agentName, "lastSeen:wires1",  getAgentVariable(agentName, 'currentLocation'))
+						console.log(agent + " sees - Item: wires1 | Location: "+ agent.currentLocation);
+						// console.log(agentName + " sees - Item: wires1 | Location: "+ getAgentVariable(agentName, 'currentLocation'));
+						// setAgentVariable(agentName, "lastSeen:wires1",  getAgentVariable(agentName, 'currentLocation'))
+						agent.setLastSawItemAtLocation(wires1, agent.currentLocation);
 					},
 					//time taken
 					0
@@ -170,11 +211,14 @@ let lastSeenByAgent = function(agentName){
 		selector([
 			action(
 					//precondition
-					() => getAgentVariable(agentName, 'currentLocation') == getItemVariable(wires2, "currentLocation"),
+					() => agent.currentLocation == wires2.currentLocation,
+					// () => getAgentVariable(agentName, 'currentLocation') == getItemVariable(wires2, "currentLocation"),
 					//effect
 					() => {
-						console.log(agentName + "sees - Item: wires2 | Location: "+getAgentVariable(agentName, 'currentLocation'));
-						setAgentVariable(agentName, "lastSeen:wires2",  getAgentVariable(agentName, 'currentLocation'))
+						console.log(agent + " sees - Item: wires2 | Location: "+ agent.currentLocation);
+						// console.log(agentName + "sees - Item: wires2 | Location: "+getAgentVariable(agentName, 'currentLocation'));
+						agent.setLastSawItemAtLocation(wires2, agent.currentLocation);
+						// setAgentVariable(agentName, "lastSeen:wires2",  getAgentVariable(agentName, 'currentLocation'))
 					},
 					//time taken
 					0
@@ -184,11 +228,15 @@ let lastSeenByAgent = function(agentName){
 		selector([
 			action(
 					//precondition
-					() => getAgentVariable(agentName, 'currentLocation') == getVariable("playerLocation"),
+					() => agent.currentLocation  == getVariable("playerLocation"),
+					// () => getAgentVariable(agentName, 'currentLocation') == getVariable("playerLocation"),
 					//effect
 					() => {
-						console.log(agentName + "sees - Person: Player | Location: "+getAgentVariable(agentName, 'currentLocation'));
-						setAgentVariable(agentName, "lastSeen:player",  getAgentVariable(agentName, 'currentLocation'))
+						console.log(agent + " sees - Person: Player | Location: "+ agent.currentLocation);
+						// console.log(agentName + "sees - Person: Player | Location: "+getAgentVariable(agentName, 'currentLocation'));
+						// agent.setLastSawItemAtLocation(wires1, agent.currentLocation);
+						agent.setLastSawPersonAtLocation('player', agent.currentLocation);
+						// setAgentVariable(agentName, "lastSeen:player",  getAgentVariable(agentName, 'currentLocation'))
 					},
 					//time taken
 					0

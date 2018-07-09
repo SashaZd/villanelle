@@ -1,6 +1,8 @@
 import Queue from "typescript-collections/dist/lib/Queue";
 import {isUndefined} from "typescript-collections/dist/lib/util";
 
+interface Dictionary<T> { [key: string]: T; }
+
 export enum Status {
     RUNNING,
     SUCCESS,
@@ -155,7 +157,29 @@ export function getRandNumber(min: number, max: number): number {
 //1. story instance
 
 //1.1 locations
+// var locationGraph: Dictionary<Location> = {};
+
 var locationGraph = {};
+
+// // 
+// class Location {
+//     adjacentLocations: Dictionary<Location[]>;
+
+//     constructor(public name: string, adjacentLocations: string[]) {
+//         this.name = name;
+
+//         for (var i = 0; i < adjacentLocations.length; i++) {
+//             if(adjacentLocations[i] in locationGraph){
+
+//             }
+//             else{
+//                 var new_location = new Location()
+//             }
+//         }
+
+//     }
+// }
+
 
 //add to both sides
 export function addLocation(locationName: string, adjacentLocations: string[]) {
@@ -225,19 +249,88 @@ export function getNextLocation(start: string, destination: string): string {
 }
 
 //1.2 agents
-var agents = [];
+
+class Agent {
+    currentLocation: string;
+    destination: string;
+    lastSeenItem: {[itemName: string]: string};
+    lastSeenPerson: {[itemName: string]: string};
+
+    constructor(public name: string){
+        this.name = name;
+        console.log(this.name + " constructor")
+    }
+
+    setCurrentLocation(currentlocation: string){
+        this.currentLocation = currentlocation;
+    }
+
+    setLastSawItemAtLocation(item: Item, atLocation: string){
+        this.lastSeenItem[item.name] = atLocation;
+    }
+
+    setLastSawPersonAtLocation(agentName: string, atLocation: string){
+        this.lastSeenPerson[agentName] = atLocation;
+    }
+
+    setDestination(destination: string){
+        this.destination = destination;
+    }
+
+    hasSeenItem(item: Item){
+        if(item.name in this.lastSeenItem){
+            console.log(this.name + ": saw item:"+item.name);
+            return true; //this.lastSeenItem[item.name]
+        }
+        else{
+            return false;
+        }
+    }
+
+    whereIsItem(item: Item){
+        if(item.name in this.lastSeenItem){
+            console.log(this.name + ": saw item:"+item.name + " at location:"+this.lastSeenItem[item.name]);
+            return this.lastSeenItem[item.name]
+        }
+        else{
+            return false;
+        }
+    }
+
+}
+
+var agents: Agent[];
+// var agents = [];
 
 export function addAgent(agentName: string) {
-    agents.push(agentName);
-    return agentName;
+    
+    var agent = new Agent(agentName);
+    agents.push(agent);
+    return agent;
 }
 
 //1.3 items
-var items = [];
+
+// Todo
+class Item {
+    currentLocation: string;
+
+    constructor(public name: string) {
+        this.name = name;
+    }
+
+    setCurrentLocation(currentlocation: string){
+        this.currentLocation = currentlocation;
+    }
+}
+
+var items: Item[];
+// var items = [];
 
 export function addItem(itemName: string) {
-    items.push(itemName);
-    return itemName;
+    var item = new Item(itemName);
+    items.push(item);
+    return item;
 }
 
 //1.4 variables
@@ -282,8 +375,9 @@ export function isAgentVariableNotSet(agent: string, varName: string): boolean {
     return isUndefined(agentVariables[agent]) || isUndefined(agentVariables[agent][varName]);
 }
 
-export function setItemVariable(item: string, varName: string, value: any) {
-    if (isUndefined(itemVariables[item]))
+// todo
+export function setItemVariable(item: Item, varName: string, value: any) {
+    if (isUndefined(itemVariables[item.name]))
         itemVariables[item] = {};
 
     itemVariables[item][varName] = value;
@@ -301,10 +395,12 @@ export function getItemVariable(item: string, varName: string) {
 
 //2
 //agent-behavior tree mapping
-var agentTrees = {};
 
-export function attachTreeToAgent(agent: string, tree: Tick) {
-    agentTrees[agent] = tree;
+var agentTrees: {[agentName: string] : Tick} = {};
+// var agentTrees = {};
+
+export function attachTreeToAgent(agent: Agent, tree: Tick) {
+    agentTrees[agent.name] = tree;
 }
 
 //3.1
@@ -373,11 +469,14 @@ export function getUserInteractionObject() {
 export function worldTick() {
     //all agent ticks
     for (var i = 0; i < agents.length; i++) {
-        var tree = agentTrees[agents[i]];
+        var tree = agentTrees[agents[i].name];
         if (!isUndefined(tree)) {
-            setVariable("executingAgent", agents[i]);
+            setVariable("executingAgent", agents[i].name);
             execute(tree);
         }
     }
     runUserInteractionTrees();
 }
+
+
+

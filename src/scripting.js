@@ -132,7 +132,22 @@ function getRandNumber(min, max) {
 exports.getRandNumber = getRandNumber;
 //1. story instance
 //1.1 locations
+// var locationGraph: Dictionary<Location> = {};
 var locationGraph = {};
+// // 
+// class Location {
+//     adjacentLocations: Dictionary<Location[]>;
+//     constructor(public name: string, adjacentLocations: string[]) {
+//         this.name = name;
+//         for (var i = 0; i < adjacentLocations.length; i++) {
+//             if(adjacentLocations[i] in locationGraph){
+//             }
+//             else{
+//                 var new_location = new Location()
+//             }
+//         }
+//     }
+// }
 //add to both sides
 function addLocation(locationName, adjacentLocations) {
     if (locationGraph[locationName] == undefined)
@@ -193,17 +208,52 @@ function getNextLocation(start, destination) {
 }
 exports.getNextLocation = getNextLocation;
 //1.2 agents
-var agents = [];
+var Agent = /** @class */ (function () {
+    function Agent(name) {
+        this.name = name;
+        this.name = name;
+        console.log(this.name + " constructor");
+    }
+    Agent.prototype.setCurrentLocation = function (currentlocation) {
+        this.currentLocation = currentlocation;
+    };
+    Agent.prototype.setLastSawItemAtLocation = function (item, atLocation) {
+        this.lastSeenItem[item.name] = atLocation;
+    };
+    Agent.prototype.setLastSawPersonAtLocation = function (agentName, atLocation) {
+        this.lastSeenPerson[agentName] = atLocation;
+    };
+    Agent.prototype.setDestination = function (destination) {
+        this.destination = destination;
+    };
+    return Agent;
+}());
+var agents;
+// var agents = [];
 function addAgent(agentName) {
-    agents.push(agentName);
-    return agentName;
+    var agent = new Agent(agentName);
+    agents.push(agent);
+    return agent;
 }
 exports.addAgent = addAgent;
 //1.3 items
-var items = [];
+// Todo
+var Item = /** @class */ (function () {
+    function Item(name) {
+        this.name = name;
+        this.name = name;
+    }
+    Item.prototype.setCurrentLocation = function (currentlocation) {
+        this.currentLocation = currentlocation;
+    };
+    return Item;
+}());
+var items;
+// var items = [];
 function addItem(itemName) {
-    items.push(itemName);
-    return itemName;
+    var item = new Item(itemName);
+    items.push(item);
+    return item;
 }
 exports.addItem = addItem;
 //1.4 variables
@@ -246,8 +296,9 @@ function isAgentVariableNotSet(agent, varName) {
     return util_1.isUndefined(agentVariables[agent]) || util_1.isUndefined(agentVariables[agent][varName]);
 }
 exports.isAgentVariableNotSet = isAgentVariableNotSet;
+// todo
 function setItemVariable(item, varName, value) {
-    if (util_1.isUndefined(itemVariables[item]))
+    if (util_1.isUndefined(itemVariables[item.name]))
         itemVariables[item] = {};
     itemVariables[item][varName] = value;
     return value;
@@ -264,8 +315,9 @@ exports.getItemVariable = getItemVariable;
 //2
 //agent-behavior tree mapping
 var agentTrees = {};
+// var agentTrees = {};
 function attachTreeToAgent(agent, tree) {
-    agentTrees[agent] = tree;
+    agentTrees[agent.name] = tree;
 }
 exports.attachTreeToAgent = attachTreeToAgent;
 //3.1
@@ -321,9 +373,9 @@ exports.getUserInteractionObject = getUserInteractionObject;
 function worldTick() {
     //all agent ticks
     for (var i = 0; i < agents.length; i++) {
-        var tree = agentTrees[agents[i]];
+        var tree = agentTrees[agents[i].name];
         if (!util_1.isUndefined(tree)) {
-            setVariable("executingAgent", agents[i]);
+            setVariable("executingAgent", agents[i].name);
             execute(tree);
         }
     }
