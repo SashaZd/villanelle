@@ -50,7 +50,7 @@ var wires2 = addItem("wires2");
 
 
 wires1.setCurrentLocation(STORAGE);
-wires1.setCurrentLocation(MONITORING_ROOM);
+wires2.setCurrentLocation(MONITORING_ROOM);
 
 // setItemVariable(wires1, "currentLocation", STORAGE);
 // setItemVariable(wires2, "currentLocation", MONITORING_ROOM);
@@ -91,8 +91,20 @@ Eddie.setLastSawItemAtLocation(wires1, UNKNOWN);
 Beatrice.setLastSawItemAtLocation(wires1, UNKNOWN);
 
 // setAgentVariable(Caleb, "lastSeen:wires1", UNKNOWN)
-setAgentVariable(Caleb, "lastSeen:wires2", UNKNOWN)
-setAgentVariable(Caleb, "lastSeen:player", UNKNOWN)
+// setAgentVariable(Caleb, "lastSeen:wires2", UNKNOWN)
+// setAgentVariable(Caleb, "lastSeen:player", UNKNOWN)
+
+Caleb.setLastSawItemAtLocation(wires2, UNKNOWN);
+// Caleb.setLastSawPersonAtLocation(player, UNKNOWN);
+Quinn.setLastSawItemAtLocation(wires2, UNKNOWN);
+// Quinn.setLastSawPersonAtLocation(player, UNKNOWN);
+Mark.setLastSawItemAtLocation(wires2, UNKNOWN);
+// Mark.setLastSawPersonAtLocation(player, UNKNOWN);
+Eddie.setLastSawItemAtLocation(wires2, UNKNOWN);
+// Eddie.setLastSawPersonAtLocation(player, UNKNOWN);
+Beatrice.setLastSawItemAtLocation(wires2, UNKNOWN);
+// Beatrice.setLastSawPersonAtLocation(player, UNKNOWN);
+
 
 // Maddie: Change all the following for any items: 
 // getItemVariable(wires1, "currentLocation") ===> To
