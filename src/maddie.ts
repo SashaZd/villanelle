@@ -4,7 +4,7 @@ import {
 	getRandNumber, getVariable, sequence, selector, execute, Precondition, getAgentVariable, neg_guard, guard,
 	isVariableNotSet, displayDescriptionAction, addUserAction, addUserInteractionTree, initialize,
 	getUserInteractionObject, executeUserAction, worldTick, attachTreeToAgent, setItemVariable, getItemVariable,
-	displayActionEffectText, areAdjacent, addUserActionTree, Agent, Item
+	displayActionEffectText, areAdjacent, addUserActionTree, Agent
 } from "./scripting";
 import {isUndefined} from "typescript-collections/dist/lib/util";
 
@@ -126,79 +126,100 @@ Beatrice.setLastSawItemAtLocation(wires2, UNKNOWN);
 // 	// body...
 // }
 
-let setRandNumber = action(
-	() => true,
-	() => setVariable("randNumber", 
-			getRandNumber(1, 11)),
+
+function setNextDestinationForAgent(agent: Agent, destination: string = "UNKNOWN") {
+
+	if(destination == "UNKNOWN"){
+		let setRandNumber = action(
+			() => true,
+			() => agent.randNumber = getRandNumber(1, 11),
 			0
-);
+		);
 
-// function chooseDestinationForAgent(agent, destinationNumber=getVariable("randNumber")) {
-// 	// body...
-// }
+		// Sasha Todo: Work on using the Agent/Item types for destinations
+		let chooseENGINES = action(() => agent.randNumber == 1, () => agent.destination = ENGINES, 0);
+		let chooseSTORAGE = action(() => agent.randNumber == 2, () => agent.destination = STORAGE, 0);
+		let chooseDOCTORS_OFFICE = action(() => agent.randNumber == 3, () => agent.destination = DOCTORS_OFFICE, 0);
+		let chooseCOCKPIT = action(() => agent.randNumber == 4, () => agent.destination = COCKPIT, 0);
+		let chooseESCAPE_POD = action(() => agent.randNumber == 5, () => agent.destination = ESCAPE_POD, 0);
+		let chooseTRANSPORT_ROOM = action(() => agent.randNumber == 6, () => agent.destination = TRANSPORT_ROOM, 0);
+		let chooseMONITORING_ROOM = action(() => agent.randNumber == 7, () => agent.destination = MONITORING_ROOM, 0);
+		let chooseMAIN_AREA = action(() => agent.randNumber == 8, () => agent.destination = MAIN_AREA, 0);
+		let chooseFEM_BEDROOM = action(() => agent.randNumber == 9, () => agent.destination = FEM_BEDROOM, 0);
+		let chooseMALE_BEDROOM = action(() => agent.randNumber == 10, () => agent.destination = MALE_BEDROOM, 0);
+		let chooseBATHROOM = action(() => agent.randNumber == 11, () => agent.destination = BATHROOM, 0);
+
+		let setNextDestination = sequence([
+			setRandNumber,
+			selector([
+				chooseENGINES,
+				chooseCOCKPIT,
+				chooseSTORAGE,
+				chooseDOCTORS_OFFICE,
+				chooseBATHROOM,
+				chooseMALE_BEDROOM,
+				chooseFEM_BEDROOM,
+				chooseMAIN_AREA,
+				chooseMONITORING_ROOM,
+				chooseTRANSPORT_ROOM,
+				chooseESCAPE_POD
+			])
+		]);
+		return setNextDestination;
+
+	}
+	else{
+		let chooseENGINES = action(() => destination == ENGINES, () => agent.destination = ENGINES, 0);
+		let chooseSTORAGE = action(() => destination == STORAGE, () => agent.destination = STORAGE, 0);
+		let chooseDOCTORS_OFFICE = action(() => destination == DOCTORS_OFFICE, () => agent.destination = DOCTORS_OFFICE, 0);
+		let chooseCOCKPIT = action(() => destination == COCKPIT, () => agent.destination = COCKPIT, 0);
+		let chooseESCAPE_POD = action(() => destination == ESCAPE_POD, () => agent.destination = ESCAPE_POD, 0);
+		let chooseTRANSPORT_ROOM = action(() => destination == TRANSPORT_ROOM, () => agent.destination = TRANSPORT_ROOM, 0);
+		let chooseMONITORING_ROOM = action(() => destination == MONITORING_ROOM, () => agent.destination = MONITORING_ROOM, 0);
+		let chooseMAIN_AREA = action(() => destination == MAIN_AREA, () => agent.destination = MAIN_AREA, 0);
+		let chooseFEM_BEDROOM = action(() => destination == FEM_BEDROOM, () => agent.destination = FEM_BEDROOM, 0);
+		let chooseMALE_BEDROOM = action(() => destination == MALE_BEDROOM, () => agent.destination = MALE_BEDROOM, 0);
+		let chooseBATHROOM = action(() => destination == BATHROOM, () => agent.destination = BATHROOM, 0);
 
 
+		let setNextDestination = selector([
+			chooseENGINES,
+			chooseCOCKPIT,
+			chooseSTORAGE,
+			chooseDOCTORS_OFFICE,
+			chooseBATHROOM,
+			chooseMALE_BEDROOM,
+			chooseFEM_BEDROOM,
+			chooseMAIN_AREA,
+			chooseMONITORING_ROOM,
+			chooseTRANSPORT_ROOM,
+			chooseESCAPE_POD
+		]);
 
-// Sasha Todo: Work on using the Agent/Item types for destinations
-let chooseENGINES = action(() => getVariable("randNumber") == 1, () => setVariable("destination", ENGINES), 0);
-let chooseSTORAGE = action(() => getVariable("randNumber") == 2, () => setVariable("destination", STORAGE), 0);
-let chooseDOCTORS_OFFICE = action(() => getVariable("randNumber") == 3, () => setVariable("destination", DOCTORS_OFFICE), 0);
-let chooseCOCKPIT = action(() => getVariable("randNumber") == 4, () => setVariable("destination", COCKPIT), 0);
-let chooseESCAPE_POD = action(() => getVariable("randNumber") == 5, () => setVariable("destination", ESCAPE_POD), 0);
-let chooseTRANSPORT_ROOM = action(() => getVariable("randNumber") == 6, () => setVariable("destination", TRANSPORT_ROOM), 0);
-let chooseMONITORING_ROOM = action(() => getVariable("randNumber") == 7, () => setVariable("destination", MONITORING_ROOM), 0);
-let chooseMAIN_AREA = action(() => getVariable("randNumber") == 8, () => setVariable("destination", MAIN_AREA), 0);
-let chooseFEM_BEDROOM = action(() => getVariable("randNumber") == 9, () => setVariable("destination", FEM_BEDROOM), 0);
-let chooseMALE_BEDROOM = action(() => getVariable("randNumber") == 10, () => setVariable("destination", MALE_BEDROOM), 0);
-let chooseBATHROOM = action(() => getVariable("randNumber") == 11, () => setVariable("destination", BATHROOM), 0);
+		return setNextDestination;
+	}
 
-
-
-let atDestinationAgent = function(agentName){
-	return () => getAgentVariable(agentName, "destination") == getAgentVariable(agentName, "currentLocation");
 }
 
 
-let atDestinationCaleb: Precondition = atDestinationAgent(Caleb)
-let setDestinationCalebPrecond: Precondition = () => isVariableNotSet("destination") || atDestinationCaleb();
+let setDestinationPrecondForAgent = function(agent: Agent){
+	let setDestinationPrecond: Precondition = () => isUndefined(agent.destination) || agent.destination == agent.currentLocation;
+	return setDestinationPrecond;	
+}
 
 // // create behavior trees
-let setNextDestination = sequence([
-	setRandNumber,
-	selector([
-		chooseENGINES,
-		chooseCOCKPIT,
-		chooseSTORAGE,
-		chooseDOCTORS_OFFICE,
-		chooseBATHROOM,
-		chooseMALE_BEDROOM,
-		chooseFEM_BEDROOM,
-		chooseMAIN_AREA,
-		chooseMONITORING_ROOM,
-		chooseTRANSPORT_ROOM,
-		chooseESCAPE_POD
-			   
-	])
-]);
 
-let gotoNextLocationAgent = function(agentName){
+
+let gotoNextLocationForAgent = function(agent: Agent){
 	return  action(
 		() => true,
 		() => {
-			setAgentVariable(agentName, "currentLocation", getNextLocation(getAgentVariable(agentName, "currentLocation"), getVariable("destination")));
-			console.log(agentName + " is at: " + getAgentVariable(agentName, "currentLocation"));
-			// console.log("Hello: " + getAgentVariable(Caleb, 'currentLocation') == getItemVariable(wires1, "currentLocation"));
+			agent.currentLocation = getNextLocation(agent.currentLocation, agent.destination);
+			console.log(agent, " at: ", agent.currentLocation);
 		},
 		0
 	);
 }
-
-
-let gotoNextLocationCaleb = gotoNextLocationAgent(Caleb);
-let gotoNextLocationQuinn = gotoNextLocationAgent(Quinn);
-let gotoNextLocationMark = gotoNextLocationAgent(Mark);
-let gotoNextLocationEddie = gotoNextLocationAgent(Eddie);
-let gotoNextLocationBeatrice = gotoNextLocationAgent(Beatrice);
 
 
 let lastSeenByAgent = function(agent){
@@ -259,14 +280,6 @@ let lastSeenByAgent = function(agent){
 };
 
 
-
-let lastSeenByCaleb = lastSeenByAgent(Caleb)
-let lastSeenByQuinn = lastSeenByAgent(Quinn)
-let lastSeenByMark = lastSeenByAgent(Mark)
-let lastSeenByEddie = lastSeenByAgent(Eddie)
-let lastSeenByBeatrice = lastSeenByAgent(Beatrice)
-
-
 // let findItem = action(
 //     () => getAgentVariable(Caleb, 'currentLocation') == getItemVariable(wires1, "currentLocation"),
 //     () => {
@@ -308,57 +321,51 @@ let lastSeenByBeatrice = lastSeenByAgent(Beatrice)
 //     ])
 // ]);
 
-let search = sequence([
+let searchForAgent = function(agent: Agent){
+	let search = sequence([
 		selector([
-			guard(setDestinationCalebPrecond, setNextDestination),
+			guard(setDestinationPrecondForAgent(agent), setNextDestinationForAgent(agent)),
 			action(() => true, () => {
 			},0)
 		]),
-		gotoNextLocationCaleb,
+		gotoNextLocationForAgent(agent),
 	]);
 
-
-// let search = sequence([
-//         selector([
-//             guard(setDestinationPrecond, setNextDestination),
-//             action(() => true, () => {
-//             },0)
-//         ]),
-//         gotoNextLocation,
-//     ]);
+	return search
+}
 
 let CalebBT = sequence([
-	lastSeenByCaleb,
+	lastSeenByAgent(Caleb),
 	sequence([
-		search, lastSeenByCaleb
+		searchForAgent(Caleb), lastSeenByAgent(Caleb)
 	])
 ]);
 
 let QuinnBT = sequence([
-	lastSeenByQuinn,
+	lastSeenByAgent(Quinn),
 	sequence([
-		search, lastSeenByQuinn
+		searchForAgent(Quinn), lastSeenByAgent(Quinn)
 	])
 ]);
 
 let MarkBT = sequence([
-	lastSeenByMark,
+	lastSeenByAgent(Mark),
 	sequence([
-		search, lastSeenByMark
+		searchForAgent(Mark), lastSeenByAgent(Mark)
 	])
 ]);
 
 let EddieBT = sequence([
-	lastSeenByEddie,
+	lastSeenByAgent(Eddie),
 	sequence([
-		search, lastSeenByEddie
+		searchForAgent(Eddie), lastSeenByAgent(Eddie)
 	])
 ]);
 
 let BeatriceBT = sequence([
-	lastSeenByBeatrice,
+	lastSeenByAgent(Beatrice),
 	sequence([
-		search, lastSeenByBeatrice
+		searchForAgent(Beatrice), lastSeenByAgent(Beatrice)
 	])
 ]);
 
@@ -468,7 +475,7 @@ var tlStateBT = guard(() => getVariable(playerLocation) == MALE_BEDROOM,
 	));
 addUserInteractionTree(tlStateBT);
 
-var wires1BT = guard(() => getVariable(playerLocation) == getItemVariable(wires1, "currentLocation"),
+var wires1BT = guard(() => getVariable(playerLocation) == wires1.currentLocation, //  getItemVariable(wires1, "currentLocation")
 	sequence([
 			displayDescriptionAction("You notice wires on the ground."),
 			addUserActionTree("Pick up the wires.",
@@ -486,7 +493,7 @@ var wires1BT = guard(() => getVariable(playerLocation) == getItemVariable(wires1
 	));
 addUserInteractionTree(wires1BT);
 
-var wires2BT = guard(() => getVariable(playerLocation) == getItemVariable(wires2, "currentLocation"),
+var wires2BT = guard(() => getVariable(playerLocation) == wires2.currentLocation, // getItemVariable(wires2, "currentLocation"),
 	sequence([
 			displayDescriptionAction("You notice wires on the ground."),
 			addUserAction("Pick up the wires.", () => {

@@ -250,11 +250,12 @@ export function getNextLocation(start: string, destination: string): string {
 
 //1.2 agents
 
-class Agent {
+export class Agent {
     currentLocation: string;
     destination: string;
-    lastSeenItem: {[itemName: string]: string};
-    lastSeenPerson: {[itemName: string]: string};
+    lastSeenItem: {[itemName: string]: string} = {};
+    lastSeenPerson: {[itemName: string]: string} = {};
+    randNumber: number = 0;
 
     constructor(public name: string){
         this.name = name;
@@ -299,12 +300,13 @@ class Agent {
 
 }
 
-var agents: Agent[];
+var agents: Array<Agent> = new Array<Agent>();
 // var agents = [];
 
 export function addAgent(agentName: string) {
-    
+    // console.log("Adding: "+agentName);
     var agent = new Agent(agentName);
+    console.log(agent);
     agents.push(agent);
     return agent;
 }
@@ -324,7 +326,7 @@ class Item {
     }
 }
 
-var items: Item[];
+var items: Array<Item> = new Array<Item>();
 // var items = [];
 
 export function addItem(itemName: string) {
@@ -378,9 +380,9 @@ export function isAgentVariableNotSet(agent: string, varName: string): boolean {
 // todo
 export function setItemVariable(item: Item, varName: string, value: any) {
     if (isUndefined(itemVariables[item.name]))
-        itemVariables[item] = {};
+        itemVariables[item.name] = {};
 
-    itemVariables[item][varName] = value;
+    itemVariables[item.name][varName] = value;
     return value;
 }
 

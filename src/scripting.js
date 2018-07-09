@@ -211,6 +211,9 @@ exports.getNextLocation = getNextLocation;
 var Agent = /** @class */ (function () {
     function Agent(name) {
         this.name = name;
+        this.lastSeenItem = {};
+        this.lastSeenPerson = {};
+        this.randNumber = 0;
         this.name = name;
         console.log(this.name + " constructor");
     }
@@ -226,12 +229,33 @@ var Agent = /** @class */ (function () {
     Agent.prototype.setDestination = function (destination) {
         this.destination = destination;
     };
+    Agent.prototype.hasSeenItem = function (item) {
+        if (item.name in this.lastSeenItem) {
+            console.log(this.name + ": saw item:" + item.name);
+            return true; //this.lastSeenItem[item.name]
+        }
+        else {
+            return false;
+        }
+    };
+    Agent.prototype.whereIsItem = function (item) {
+        if (item.name in this.lastSeenItem) {
+            console.log(this.name + ": saw item:" + item.name + " at location:" + this.lastSeenItem[item.name]);
+            return this.lastSeenItem[item.name];
+        }
+        else {
+            return false;
+        }
+    };
     return Agent;
 }());
-var agents;
+exports.Agent = Agent;
+var agents = new Array();
 // var agents = [];
 function addAgent(agentName) {
+    // console.log("Adding: "+agentName);
     var agent = new Agent(agentName);
+    console.log(agent);
     agents.push(agent);
     return agent;
 }
@@ -248,7 +272,7 @@ var Item = /** @class */ (function () {
     };
     return Item;
 }());
-var items;
+var items = new Array();
 // var items = [];
 function addItem(itemName) {
     var item = new Item(itemName);
@@ -299,8 +323,8 @@ exports.isAgentVariableNotSet = isAgentVariableNotSet;
 // todo
 function setItemVariable(item, varName, value) {
     if (util_1.isUndefined(itemVariables[item.name]))
-        itemVariables[item] = {};
-    itemVariables[item][varName] = value;
+        itemVariables[item.name] = {};
+    itemVariables[item.name][varName] = value;
     return value;
 }
 exports.setItemVariable = setItemVariable;
