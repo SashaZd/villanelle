@@ -383,7 +383,7 @@ var startStateBT = guard(() => getVariable(playerLocation) == MAIN_AREA,
             selector([
                 guard(() => getVariable("theStart") == 0,
                     sequence([
-                        displayDescriptionAction("<p>It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death.</p>"),
+                        displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
                         addUserAction("Next.", () => {
                             setVariable("theStart", 1);
                         })
@@ -394,12 +394,13 @@ var startStateBT = guard(() => getVariable(playerLocation) == MAIN_AREA,
                         displayDescriptionAction("You enter the ship's main area."),
                         addUserAction("Go north to enter the engine room.", () => setVariable(playerLocation, ENGINES)),
 						addUserAction("Go northeast to enter the storage room.", () => setVariable(playerLocation, STORAGE)),
+						addUserAction("Go east to enter the cockpit.", () => setVariable(playerLocation, COCKPIT)),
 						addUserAction("Go southeast to enter the doctor's office.", () => setVariable(playerLocation, DOCTORS_OFFICE)),
-						addUserAction(".", () => setVariable(playerLocation, FEM_BEDROOM)),
-						addUserAction("Go west to enter the bathroom.", () => setVariable(playerLocation, BATHROOM)),
-						addUserAction(".", () => setVariable(playerLocation, MALE_BEDROOM)),
-						addUserAction("Go southwest to enter the escape pod.", () => setVariable(playerLocation, ESCAPE_POD)),
+						addUserAction("Go south into the monitoring room.", () => setVariable(playerLocation, MONITORING_ROOM)),
 						addUserAction("Go south into the transport room.", () => setVariable(playerLocation, TRANSPORT_ROOM)),
+						addUserAction("Go southwest to enter the escape pod.", () => setVariable(playerLocation, ESCAPE_POD)),
+						addUserAction("Go west to enter the bathroom.", () => setVariable(playerLocation, BATHROOM)),
+
                     ])),
 
                	// Optional
@@ -414,93 +415,252 @@ addUserInteractionTree(startStateBT);
 
 var bcStateBT = guard(() => getVariable(playerLocation) == ENGINES,
 	sequence([
-			displayDescriptionAction("You enter the engine room."),
-			addUserAction("Head east into the storage room.", () => setVariable(playerLocation, STORAGE)),
-			addUserAction("Return to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
-		]
-	));
+			// selector([
+   //              guard(() => getVariable("theStart") == 0,
+   //                  sequence([
+   //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+   //                      addUserAction("Next.", () => {
+   //                          setVariable("theStart", 1);
+   //                      })
+   //                  ])),
+
+   //             	guard(() => getVariable("theStart") == 1,
+   //                  sequence([
+                       displayDescriptionAction("You enter the engine room."),
+						addUserAction("Head east into the storage room.", () => setVariable(playerLocation, STORAGE)),
+						addUserAction("Return to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
+                    // ])),
+
+               	// Optional
+                // displayDescriptionAction("Something seems to have gone wrong...")
+            ]),
+		// ]
+	);
 addUserInteractionTree(bcStateBT);
 
 var brStateBT = guard(() => getVariable(playerLocation) == STORAGE,
 	sequence([
-			displayDescriptionAction("You moved into the storage room."),
-			addUserAction("Enter the doctor's office.", () => setVariable(playerLocation, DOCTORS_OFFICE)),
-			addUserAction("Move back into the engine room.", () => setVariable(playerLocation, ENGINES)),
-		]
-	));
+			// selector([
+   //              guard(() => getVariable("theStart") == 0,
+   //                  sequence([
+   //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+   //                      addUserAction("Next.", () => {
+   //                          setVariable("theStart", 1);
+   //                      })
+   //                  ])),
+
+   //             	guard(() => getVariable("theStart") == 1,
+   //                  sequence([
+                       displayDescriptionAction("You moved into the storage room."),
+						addUserAction("Move into the engine room.", () => setVariable(playerLocation, ENGINES)),
+						addUserAction("Return to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
+                    // ])),
+
+               	// Optional
+                // displayDescriptionAction("Something seems to have gone wrong...")
+            ]),
+		// ]
+	);
 addUserInteractionTree(brStateBT);
 
 var quarters1BT = guard(() => getVariable(playerLocation) == DOCTORS_OFFICE,
 	sequence([
-			displayDescriptionAction("You enter the doctor's office."),
-			addUserAction("Return to the storage room.", () => setVariable(playerLocation, STORAGE)),
-			addUserAction("Move into the cockpit.", () => setVariable(playerLocation, COCKPIT)),
-			addUserAction("Go to the monitoring room.", () => setVariable(playerLocation, MONITORING_ROOM)),
-			addUserAction("Return to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
-		]
-	));
+			// selector([
+   //              guard(() => getVariable("theStart") == 0,
+   //                  sequence([
+   //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+   //                      addUserAction("Next.", () => {
+   //                          setVariable("theStart", 1);
+   //                      })
+   //                  ])),
+
+   //             	guard(() => getVariable("theStart") == 1,
+   //                  sequence([
+                       displayDescriptionAction("You enter the doctor's office."),
+						addUserAction("Move into the cockpit.", () => setVariable(playerLocation, COCKPIT)),
+						addUserAction("Go to the monitoring room.", () => setVariable(playerLocation, MONITORING_ROOM)),
+						addUserAction("Return to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
+                    // ])),
+
+               	// Optional
+                // displayDescriptionAction("Something seems to have gone wrong...")
+            ]),
+		// ]
+	);
 addUserInteractionTree(quarters1BT);
 
 var mrStateBT = guard(() => getVariable(playerLocation) == COCKPIT,
 	sequence([
-			displayDescriptionAction("You move forward into the cockpit."),
-			addUserAction("Return to the doctor's office.", () => setVariable(playerLocation, DOCTORS_OFFICE)),
-		]
-	));
+			// selector([
+   //              guard(() => getVariable("theStart") == 0,
+   //                  sequence([
+   //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+   //                      addUserAction("Next.", () => {
+   //                          setVariable("theStart", 1);
+   //                      })
+   //                  ])),
+
+   //             	guard(() => getVariable("theStart") == 1,
+   //                  sequence([
+                       displayDescriptionAction("You move forward into the cockpit."),
+						addUserAction("Move to the doctor's office.", () => setVariable(playerLocation, DOCTORS_OFFICE)),
+						addUserAction("Return to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
+		// ])),
+
+               	// Optional
+                // displayDescriptionAction("Something seems to have gone wrong...")
+            ]),
+		// ]
+	);
 addUserInteractionTree(mrStateBT);
 
 var quarters2BT = guard(() => getVariable(playerLocation) == MONITORING_ROOM,
 	sequence([
-			displayDescriptionAction("You enter the monitoring room."),
-			addUserAction("Return to the doctor's office.", () => setVariable(playerLocation, DOCTORS_OFFICE)),
-			addUserAction("Go to the transport room.", () => setVariable(playerLocation, TRANSPORT_ROOM)),
-		]
-	));
+			// selector([
+   //              guard(() => getVariable("theStart") == 0,
+   //                  sequence([
+   //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+   //                      addUserAction("Next.", () => {
+   //                          setVariable("theStart", 1);
+   //                      })
+   //                  ])),
+
+   //             	guard(() => getVariable("theStart") == 1,
+   //                  sequence([
+                       displayDescriptionAction("You enter the monitoring room."),
+						addUserAction("Move to the doctor's office.", () => setVariable(playerLocation, DOCTORS_OFFICE)),
+						addUserAction("Go to the transport room.", () => setVariable(playerLocation, TRANSPORT_ROOM)),
+						addUserAction("Return to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
+			// ])),
+
+               	// Optional
+                // displayDescriptionAction("Something seems to have gone wrong...")
+            ]),
+		// ]
+		);
 addUserInteractionTree(quarters2BT);
 
 var medicalBT = guard(() => getVariable(playerLocation) == TRANSPORT_ROOM,
 	sequence([
-			displayDescriptionAction("You enter the transport room where the teleporter is located."),
-			addUserAction("Exit to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
-			addUserAction("Return to the monitoring room.", () => setVariable(playerLocation, MONITORING_ROOM)),
-		]
-	));
+			// selector([
+   //              guard(() => getVariable("theStart") == 0,
+   //                  sequence([
+   //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+   //                      addUserAction("Next.", () => {
+   //                          setVariable("theStart", 1);
+   //                      })
+   //                  ])),
+
+   //             	guard(() => getVariable("theStart") == 1,
+   //                  sequence([
+                       displayDescriptionAction("You enter the transport room where the teleporter is located."),
+						addUserAction("Move into the monitoring room.", () => setVariable(playerLocation, MONITORING_ROOM)),
+						addUserAction("Exit to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
+			// ])),
+
+               	// Optional
+                // displayDescriptionAction("Something seems to have gone wrong...")
+            ]),
+		// ]
+		);
 addUserInteractionTree(medicalBT);
 
 var labBT = guard(() => getVariable(playerLocation) == ESCAPE_POD,
 	sequence([
-			displayDescriptionAction("You enter the escape pod."),
-			addUserAction("Exit into the main area.", () => setVariable(playerLocation, MAIN_AREA)),
-		]
-	));
+			// selector([
+   //              guard(() => getVariable("theStart") == 0,
+   //                  sequence([
+   //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+   //                      addUserAction("Next.", () => {
+   //                          setVariable("theStart", 1);
+   //                      })
+   //                  ])),
+
+   //             	guard(() => getVariable("theStart") == 1,
+   //                  sequence([
+                       displayDescriptionAction("You enter the escape pod."),
+						addUserAction("Return to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
+			// ])),
+
+               	// Optional
+                // displayDescriptionAction("Something seems to have gone wrong...")
+            ]),
+		// ]
+		);
 addUserInteractionTree(labBT);
 
 var trStateBT = guard(() => getVariable(playerLocation) == FEM_BEDROOM,
 	sequence([
-			displayDescriptionAction("You move into the females' bedroom."),
-			addUserAction("Move south to the bathroom.", () => setVariable(playerLocation, BATHROOM)),
-			addUserAction("Exit into the main room.", () => setVariable(playerLocation, MAIN_AREA)),
-		]
-	));
+			// selector([
+   //              guard(() => getVariable("theStart") == 0,
+   //                  sequence([
+   //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+   //                      addUserAction("Next.", () => {
+   //                          setVariable("theStart", 1);
+   //                      })
+   //                  ])),
+
+   //             	guard(() => getVariable("theStart") == 1,
+   //                  sequence([
+                      displayDescriptionAction("You move into the females' bedroom."),
+						addUserAction("Return to the bathroom.", () => setVariable(playerLocation, BATHROOM)),
+// ])),
+
+               	// Optional
+                // displayDescriptionAction("Something seems to have gone wrong...")
+            ]),
+		// ]
+		);
 addUserInteractionTree(trStateBT);
 
 var tcStateBT = guard(() => getVariable(playerLocation) == BATHROOM,
 	sequence([
-			displayDescriptionAction("You move into the bathroom."),
-			addUserAction("Move south into the males' bedroom.", () => setVariable(playerLocation, MALE_BEDROOM)),
-			addUserAction("Enter the main area.", () => setVariable(playerLocation, MAIN_AREA)),
-			addUserAction("Move north into the females' bedroom.", () => setVariable(playerLocation, FEM_BEDROOM)),
-		]
-	));
+			// selector([
+   //              guard(() => getVariable("theStart") == 0,
+   //                  sequence([
+   //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+   //                      addUserAction("Next.", () => {
+   //                          setVariable("theStart", 1);
+   //                      })
+   //                  ])),
+
+   //             	guard(() => getVariable("theStart") == 1,
+   //                  sequence([
+                      displayDescriptionAction("You move into the bathroom."),
+						addUserAction("Move south into the males' bedroom.", () => setVariable(playerLocation, MALE_BEDROOM)),
+						addUserAction("Move north into the females' bedroom.", () => setVariable(playerLocation, FEM_BEDROOM)),
+						addUserAction("Enter the main area.", () => setVariable(playerLocation, MAIN_AREA)),
+// ])),
+
+               	// Optional
+                // displayDescriptionAction("Something seems to have gone wrong...")
+            ]),
+		// ]
+		);
 addUserInteractionTree(tcStateBT);
 
 var tlStateBT = guard(() => getVariable(playerLocation) == MALE_BEDROOM,
 	sequence([
-			displayDescriptionAction("You move into the males' bedroom."),
-			addUserAction("Enter the bathroom.", () => setVariable(playerLocation, BATHROOM)),
-			addUserAction("Enter the main area.", () => setVariable(playerLocation, MAIN_AREA)),
-		]
-	));
+			// selector([
+   //              guard(() => getVariable("theStart") == 0,
+   //                  sequence([
+   //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+   //                      addUserAction("Next.", () => {
+   //                          setVariable("theStart", 1);
+   //                      })
+   //                  ])),
+
+   //             	guard(() => getVariable("theStart") == 1,
+   //                  sequence([
+                      displayDescriptionAction("You move into the males' bedroom."),
+						addUserAction("Return to bathroom.", () => setVariable(playerLocation, BATHROOM)),
+// ])),
+
+               	// Optional
+                // displayDescriptionAction("Something seems to have gone wrong...")
+            ]),
+		// ]
+		);
 addUserInteractionTree(tlStateBT);
 
 var wires1BT = guard(() => getVariable(playerLocation) == wires1.currentLocation, //  getItemVariable(wires1, "currentLocation")
@@ -572,7 +732,7 @@ var mapPositions = {
 	"COCKPIT": {x: 860, y: 230},
 	"STORAGE": {x: 545, y: 110},
 	"DOCTORS OFFICE": {x: 725, y: 350},
-	"MAIN AREA": {x: 465, y: 240},
+	"MAIN AREA": {x: 480, y: 240},
 	"ESCAPE POD": {x: 224, y: 408},
 	"TRANSPORT ROOM": {x: 370, y: 360},
 	"MONITORING ROOM": {x: 535, y: 360},
@@ -612,8 +772,8 @@ function displayBeatrice() {
 	context.drawImage(beatriceImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 50, 50);
 }
 
-spaceshipImage.src = "../images/ship_maybe.png";
-playerImage.src = "../images/Taylor.png";
+spaceshipImage.src = "../images/ship.png";
+playerImage.src = "../images/Taylor2.png";
 calebImage.src = "../images/Caleb.png";
 quinnImage.src = "../images/Quinn.png";
 markImage.src = "../images/Mark.png";
