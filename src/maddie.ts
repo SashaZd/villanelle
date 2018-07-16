@@ -704,7 +704,7 @@ var userInteractionObject = getUserInteractionObject();
 
 // //RENDERING-----
 var displayPanel = {x: 250, y: 0};
-var textPanel = {x: 500, y: 501};
+var textPanel = {x: 270, y: 501};
 var actionsPanel = {x: 520, y: 550};
 
 var canvas = <HTMLCanvasElement> document.getElementById('display');
@@ -788,15 +788,57 @@ var currentSelection;
 var yOffset = actionsPanel.y + 25;
 var yOffsetIncrement = 25;
 
+
+
+function wrapText(text) {
+
+    console.log("Wrap Text");
+    var wa=text.split(" "),
+        phraseArray=[],
+        lastPhrase=wa[0],
+        measure=0,
+        splitChar=" ";
+    if (wa.length <= 1) {
+        return wa
+    }
+
+    for (var i=1;i<wa.length;i++) {
+        var w=wa[i];
+        measure=context.measureText(lastPhrase+splitChar+w).width;
+        if (measure<1000) {
+            lastPhrase+=(splitChar+w);
+        } else {
+            phraseArray.push(lastPhrase);
+            lastPhrase=w;
+        }
+        if (i===wa.length-1) {
+            phraseArray.push(lastPhrase);
+            break;
+        }
+
+    }
+    
+    return phraseArray;
+}
+
 function displayTextAndActions() {
 	context.clearRect(textPanel.x, textPanel.y, 500, 1000);
-	yOffset = actionsPanel.y + 25;
+	
 
 	context.font = "15pt Calibri";
 	context.fillStyle = 'pink';
 	console.log("Actions effect text: " + userInteractionObject.actionEffectsText);
-	var textToDisplay = userInteractionObject.actionEffectsText.length != 0 ? userInteractionObject.actionEffectsText : userInteractionObject.text;
-	context.fillText(textToDisplay, textPanel.x, textPanel.y + 20);
+	var textToDisplay = userInteractionObject.actionEffectsText.length != 0 ? wrapText(userInteractionObject.actionEffectsText) : wrapText(userInteractionObject.text);
+
+
+	// console.log(textToDisplay);
+	actionsPanel.y = textToDisplay.length*25+textPanel.y+20;
+	yOffset = actionsPanel.y + 25;
+
+	for(var i=0; i<textToDisplay.length; i++){
+			context.fillText(textToDisplay[i], textPanel.x, textPanel.y+25*i+20);	
+	}
+	
 
 	context.font = "15pt Calibri";
 	context.fillStyle = 'white';

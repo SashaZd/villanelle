@@ -370,6 +370,8 @@ exports.addUserActionTree = function (text, effectTree) { return action(function
 exports.addUserAction = function (text, effect) {
     return action(function () { return true; }, function () { return mapUserActionToTree(text, action(function () { return true; }, effect, 0)); }, 0);
 };
+//     return 
+// }
 function mapUserActionToTree(text, tree) {
     userActions[text] = tree;
     userInteractionObject.userActionsText.push(text);
