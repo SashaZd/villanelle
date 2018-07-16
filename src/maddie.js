@@ -42,7 +42,7 @@ wires1.setCurrentLocation(STORAGE);
 wires2.setCurrentLocation(MONITORING_ROOM);
 // setItemVariable(wires1, "currentLocation", STORAGE);
 // setItemVariable(wires2, "currentLocation", MONITORING_ROOM);
-var wiresCollected = scripting_1.setVariable("wiresCollected", 0);
+// var wiresCollected = setVariable("wiresCollected", 0);
 // // variables
 //Caleb
 // setAgentVariable(Caleb, "currentLocation", COCKPIT);
@@ -81,9 +81,14 @@ Eddie.setLastSawItemAtLocation(wires2, UNKNOWN);
 // Eddie.setLastSawPersonAtLocation(player, UNKNOWN);
 Beatrice.setLastSawItemAtLocation(wires2, UNKNOWN);
 // Beatrice.setLastSawPersonAtLocation(player, UNKNOWN);
-// ?s
-//wrap text
-//color certain words (engine room in purple)
+// Goals for the player
+// 0: Unknown/Initial State
+// 1: Found out about Fault:1. New Goal. (only occurs if status=0)
+// 2: Fixed Fault:1 (only occurs if status=1)
+// 3: Found out about Fault:2. New Goal (only occurs if status=2)
+// 4: Fixed Fault:2 (only occurs if status=3) 
+// etc. etc.
+var goal_broken_transport = scripting_1.setVariable("TRANSPORT_ROOM:Broken", 0); // max:4
 // // 2. Define BTs
 // // create ground actions
 // Todo from here
@@ -431,15 +436,21 @@ var medicalBT = scripting_1.guard(function () { return scripting_1.getVariable(p
             scripting_1.displayDescriptionAction("Where the transporter is located and where the failure occurred. Mark often works in here. Mark is an older crewmate who avoids the spotlight like the plague. His anxiety levels shot up rapidly after the failure, and he is excessively worried that the rest of the crew blames the failure on him."),
             scripting_1.addUserAction("Next.", function () {
                 scripting_1.setVariable("TransportStart", 1);
+                console.log("This is: ", scripting_1.getVariable(goal_broken_transport));
             })
         ])),
         scripting_1.guard(function () { return scripting_1.getVariable("TransportStart") == 1; }, scripting_1.sequence([
             scripting_1.displayDescriptionAction("You enter the transport room where the teleporter is located."),
             scripting_1.addUserAction("Move into the monitoring room.", function () { return scripting_1.setVariable(playerLocation, MONITORING_ROOM); }),
             scripting_1.addUserAction("Exit to the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+            scripting_1.selector([
+                scripting_1.action(function () { return scripting_1.getVariable("TRANSPORT_ROOM:Broken") == 0; }, function () {
+                    scripting_1.displayDescriptionAction("Oh No, the first thing broke. XYZ can fix it the best. But ABC is also a good person to ask for help");
+                    scripting_1.setVariable("TRANSPORT_ROOM:Broken", 1);
+                }, 0),
+                scripting_1.displayDescriptionAction("Default here"),
+            ])
         ])),
-        // Optional
-        scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
     ]),
 ]));
 scripting_1.addUserInteractionTree(medicalBT);
@@ -534,7 +545,7 @@ scripting_1.initialize();
 var userInteractionObject = scripting_1.getUserInteractionObject();
 // //RENDERING-----
 var displayPanel = { x: 250, y: 0 };
-var textPanel = { x: 200, y: 501 };
+var textPanel = { x: 270, y: 501 };
 var actionsPanel = { x: 520, y: 550 };
 var canvas = document.getElementById('display');
 var context = canvas.getContext('2d');
@@ -614,7 +625,7 @@ function wrapText(text) {
     for (var i = 1; i < wa.length; i++) {
         var w = wa[i];
         measure = context.measureText(lastPhrase + splitChar + w).width;
-        if (measure < 500) {
+        if (measure < 1000) {
             lastPhrase += (splitChar + w);
         }
         else {
@@ -630,16 +641,15 @@ function wrapText(text) {
 }
 function displayTextAndActions() {
     context.clearRect(textPanel.x, textPanel.y, 500, 1000);
-    yOffset = actionsPanel.y + 25;
     context.font = "15pt Calibri";
     context.fillStyle = 'pink';
     console.log("Actions effect text: " + userInteractionObject.actionEffectsText);
-    var textToDisplay = userInteractionObject.actionEffectsText.length != 0 ? userInteractionObject.actionEffectsText : wrapText(userInteractionObject.text);
-    console.log(textToDisplay);
-    for (var i = 0; i < textToDisplay.length, i++;) {
-        if (i == 3) {
-            context.fillText(textToDisplay[i], textPanel.x, textPanel.y + 10 * i + 20);
-        }
+    var textToDisplay = userInteractionObject.actionEffectsText.length != 0 ? wrapText(userInteractionObject.actionEffectsText) : wrapText(userInteractionObject.text);
+    // console.log(textToDisplay);
+    actionsPanel.y = textToDisplay.length * 25 + textPanel.y + 20;
+    yOffset = actionsPanel.y + 25;
+    for (var i = 0; i < textToDisplay.length; i++) {
+        context.fillText(textToDisplay[i], textPanel.x, textPanel.y + 25 * i + 20);
     }
     context.font = "15pt Calibri";
     context.fillStyle = 'white';
