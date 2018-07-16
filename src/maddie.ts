@@ -377,10 +377,10 @@ attachTreeToAgent(Beatrice, BeatriceBT);
 
 setVariable("theStart",0);
 setVariable("EngineStart",0);
-setVariable("StorageStart", 0);
+setVariable("StorageStart",0);
 setVariable("DrOfficeStart",0);
-setVariable("CockpitStart", 0);
-setVariable("MonitoringStart", 0);
+setVariable("CockpitStart",0);
+setVariable("MonitoringStart",0);
 setVariable("TransportStart",0);
 setVariable("EscapeStart",0);
 
@@ -413,9 +413,6 @@ var startStateBT = guard(() => getVariable(playerLocation) == MAIN_AREA,
                	// Optional
                 displayDescriptionAction("Something seems to have gone wrong...")
             ]),
-
-            // Default Show
-            
         ]
     ));
 addUserInteractionTree(startStateBT);
@@ -425,7 +422,7 @@ var bcStateBT = guard(() => getVariable(playerLocation) == ENGINES,
 			selector([
                 guard(() => getVariable("EngineStart") == 0,
                     sequence([
-                        displayDescriptionAction("The engines room where Beatrice spends most of her time."),
+                        displayDescriptionAction("The engine room is where Beatrice spends most of her time. She’s a natural when it comes to problem solving, but her unapproachable and unfriendly personality turned many influential commanders away from her. Despite her personality, her engineering skills are second-to-none...granted she is the only engineer left."),
                         addUserAction("Next.", () => {
                             setVariable("EngineStart", 1);
                         })
@@ -450,8 +447,8 @@ var brStateBT = guard(() => getVariable(playerLocation) == STORAGE,
 			selector([
                 guard(() => getVariable("StorageStart") == 0,
                     sequence([
-                        displayDescriptionAction("The storage room is where Eddie spends his time and stores his janitor equipment."),
-                        addUserAction("Next.", () => {
+                        displayDescriptionAction("The storage room is where Eddie spends his time and stores his janitor equipment. Old as he is, he still does his best to contribute to the team in whatever way he can, despite lacking technical skills the other crewmates employ. Although he is a well-known hero among military personnel, his crewmates continue to remain oblivious to the fact that the man who scrubs their toilets had been one of the most accomplished military officers the universe had ever seen."),
+                        addUserAction("Next.", () => {    
                             setVariable("StorageStart", 1);
                         })
                     ])),
@@ -475,7 +472,7 @@ var quarters1BT = guard(() => getVariable(playerLocation) == DOCTORS_OFFICE,
 			selector([
                 guard(() => getVariable("DrOfficeStart") == 0,
                     sequence([
-                        displayDescriptionAction("Quinn spends a lot of time in her office looking after patients."),
+                        displayDescriptionAction("Dr. Quinn spends a lot of time in her office looking after patients. She puts all others above herself; she is constantly concerned with the well-being of her crewmates. The prospect of her patients dying still keeps her up at night, but her determination to save as many people as she can is what keeps her going."),
                         addUserAction("Next.", () => {
                             setVariable("DrOfficeStart", 1);
                         })
@@ -501,7 +498,7 @@ var mrStateBT = guard(() => getVariable(playerLocation) == COCKPIT,
 			selector([
                 guard(() => getVariable("CockpitStart") == 0,
                     sequence([
-                        displayDescriptionAction("The cockpit where Taylor commands, but Caleb spends a lot of his time there as well."),
+                        displayDescriptionAction("The cockpit is where Taylor pilots the ship, but Caleb spends a lot of his time there as well. Caleb runs things very differently from Taylor; he is a demanding leader who harshly criticizes his crewmates when failures occur. He secretly loathes Taylor; their personalities clash all-too-frequently, and their position on the ship despite his older age is a constant source of anger to the officer."),
                         addUserAction("Next.", () => {
                             setVariable("CockpitStart", 1);
                         })
@@ -552,7 +549,7 @@ var medicalBT = guard(() => getVariable(playerLocation) == TRANSPORT_ROOM,
 			selector([
                 guard(() => getVariable("TransportStart") == 0,
                     sequence([
-                        displayDescriptionAction("Where the transporter is located and where the failure occurred. Mark often works in here."),
+                        displayDescriptionAction("Where the transporter is located and where the failure occurred. Mark often works in here. Mark is an older crewmate who avoids the spotlight like the plague. His anxiety levels shot up rapidly after the failure, and he is excessively worried that the rest of the crew blames the failure on him."),
                         addUserAction("Next.", () => {
                             setVariable("TransportStart", 1);
                         })
