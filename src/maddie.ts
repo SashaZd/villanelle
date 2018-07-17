@@ -389,7 +389,7 @@ setVariable("MonitoringStart",0);
 setVariable("TransportStart",0);
 setVariable("EscapeStart",0);
 
-var startStateBT = guard(() => getVariable(playerLocation) == MAIN_AREA,
+var MainBT = guard(() => getVariable(playerLocation) == MAIN_AREA,
     sequence([
             // displayDescriptionAction("You enter the ship's main area."),
             selector([
@@ -420,9 +420,9 @@ var startStateBT = guard(() => getVariable(playerLocation) == MAIN_AREA,
             ]),
         ]
     ));
-addUserInteractionTree(startStateBT);
+addUserInteractionTree(MainBT);
 
-var bcStateBT = guard(() => getVariable(playerLocation) == ENGINES,
+var EngineBT = guard(() => getVariable(playerLocation) == ENGINES,
 	sequence([
 			selector([
                 guard(() => getVariable("EngineStart") == 0,
@@ -445,9 +445,9 @@ var bcStateBT = guard(() => getVariable(playerLocation) == ENGINES,
             ]),
 		]
 	));
-addUserInteractionTree(bcStateBT);
+addUserInteractionTree(EngineBT);
 
-var brStateBT = guard(() => getVariable(playerLocation) == STORAGE,
+var StorageBT = guard(() => getVariable(playerLocation) == STORAGE,
 	sequence([
 			selector([
                 guard(() => getVariable("StorageStart") == 0,
@@ -470,9 +470,9 @@ var brStateBT = guard(() => getVariable(playerLocation) == STORAGE,
             ]),
 		]
 	));
-addUserInteractionTree(brStateBT);
+addUserInteractionTree(StorageBT);
 
-var quarters1BT = guard(() => getVariable(playerLocation) == DOCTORS_OFFICE,
+var DrOfficeBT = guard(() => getVariable(playerLocation) == DOCTORS_OFFICE,
 	sequence([
 			selector([
                 guard(() => getVariable("DrOfficeStart") == 0,
@@ -496,9 +496,9 @@ var quarters1BT = guard(() => getVariable(playerLocation) == DOCTORS_OFFICE,
             ]),
 		]
 	));
-addUserInteractionTree(quarters1BT);
+addUserInteractionTree(DrOfficeBT);
 
-var mrStateBT = guard(() => getVariable(playerLocation) == COCKPIT,
+var CockpitBT = guard(() => getVariable(playerLocation) == COCKPIT,
 	sequence([
 			selector([
                 guard(() => getVariable("CockpitStart") == 0,
@@ -521,9 +521,9 @@ var mrStateBT = guard(() => getVariable(playerLocation) == COCKPIT,
             ]),
 		]
 	));
-addUserInteractionTree(mrStateBT);
+addUserInteractionTree(CockpitBT);
 
-var quarters2BT = guard(() => getVariable(playerLocation) == MONITORING_ROOM,
+var MonitoringBT = guard(() => getVariable(playerLocation) == MONITORING_ROOM,
 	sequence([
 			selector([
                 guard(() => getVariable("MonitoringStart") == 0,
@@ -547,9 +547,9 @@ var quarters2BT = guard(() => getVariable(playerLocation) == MONITORING_ROOM,
             ]),
 		]
 	));
-addUserInteractionTree(quarters2BT);
+addUserInteractionTree(MonitoringBT);
 
-var medicalBT = guard(
+var TransportBT = guard(
 	() => getVariable(playerLocation) == TRANSPORT_ROOM,
 	sequence([
 			selector([
@@ -572,11 +572,11 @@ var medicalBT = guard(
 						// Owais : Sanity Check 
 			            selector([
 			            	action(() => getVariable("TRANSPORT_ROOM:Broken") == 0, ()=>{
-			            		displayDescriptionAction("Oh No, the first thing broke. XYZ can fix it the best. But ABC is also a good person to ask for help");
+			            		displayDescriptionAction("There might be a problem with the teleporter software. Maybe Mark could check it out.");
 			            		setVariable("TRANSPORT_ROOM:Broken", 1);
 			            	}, 0),
 			            	action(() => getVariable("TRANSPORT_ROOM:Broken") == 1, ()=>{
-			            		displayDescriptionAction("Hullo!!!!");
+			            		displayDescriptionAction("You need to find someone to look at the teleporter sofware.");
 			            		// setVariable("TRANSPORT_ROOM:Broken", 1);
 			            	}, 0),
 			            	displayDescriptionAction("Default here")
@@ -589,9 +589,9 @@ var medicalBT = guard(
             
 		])
 	);
-addUserInteractionTree(medicalBT);
+addUserInteractionTree(TransportBT);
 
-var labBT = guard(() => getVariable(playerLocation) == ESCAPE_POD,
+var EscapePodBT = guard(() => getVariable(playerLocation) == ESCAPE_POD,
 	sequence([
 		selector([
             guard(() => getVariable("EscapeStart") == 0,
@@ -613,9 +613,9 @@ var labBT = guard(() => getVariable(playerLocation) == ESCAPE_POD,
         ]),
 	])
 );
-addUserInteractionTree(labBT);
+addUserInteractionTree(EscapePodBT);
 
-var trStateBT = guard(() => getVariable(playerLocation) == FEM_BEDROOM,
+var FBedroomBT = guard(() => getVariable(playerLocation) == FEM_BEDROOM,
 	sequence([
 			// selector([
    //              guard(() => getVariable("theStart") == 0,
@@ -637,9 +637,9 @@ var trStateBT = guard(() => getVariable(playerLocation) == FEM_BEDROOM,
             ]),
 		// ]
 		);
-addUserInteractionTree(trStateBT);
+addUserInteractionTree(FBedroomBT);
 
-var tcStateBT = guard(() => getVariable(playerLocation) == BATHROOM,
+var BathroomBT = guard(() => getVariable(playerLocation) == BATHROOM,
 	sequence([
 			// selector([
    //              guard(() => getVariable("theStart") == 0,
@@ -663,9 +663,9 @@ var tcStateBT = guard(() => getVariable(playerLocation) == BATHROOM,
             ]),
 		// ]
 		);
-addUserInteractionTree(tcStateBT);
+addUserInteractionTree(BathroomBT);
 
-var tlStateBT = guard(() => getVariable(playerLocation) == MALE_BEDROOM,
+var MBedroomBT = guard(() => getVariable(playerLocation) == MALE_BEDROOM,
 	sequence([
 			// selector([
    //              guard(() => getVariable("theStart") == 0,
@@ -687,7 +687,7 @@ var tlStateBT = guard(() => getVariable(playerLocation) == MALE_BEDROOM,
             ]),
 		// ]
 		);
-addUserInteractionTree(tlStateBT);
+addUserInteractionTree(MBedroomBT);
 
 var wires1BT = guard(() => getVariable(playerLocation) == wires1.currentLocation, //  getItemVariable(wires1, "currentLocation")
 	sequence([
