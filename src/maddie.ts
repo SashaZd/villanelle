@@ -569,23 +569,37 @@ var medicalBT = guard(
 						addUserAction("Exit to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
 
 
-						// Owais : Sanity Check 
-			            selector([
-			            	action(() => getVariable("TRANSPORT_ROOM:Broken") == 0, ()=>{
-			            		displayDescriptionAction("Oh No, the first thing broke. XYZ can fix it the best. But ABC is also a good person to ask for help");
-			            		setVariable("TRANSPORT_ROOM:Broken", 1);
-			            	}, 0),
-			            	action(() => getVariable("TRANSPORT_ROOM:Broken") == 1, ()=>{
-			            		displayDescriptionAction("Hullo!!!!");
-			            		// setVariable("TRANSPORT_ROOM:Broken", 1);
-			            	}, 0),
-			            	displayDescriptionAction("Default here")
-			        	])
+						
+
+			        	// selector([
+			         //    	action(() => getVariable("TRANSPORT_ROOM:Broken") == 1, ()=>{
+			         //    		displayDescriptionAction("Oh No, the first thing broke. XYZ can fix it the best. But ABC is also a good person to ask for help");
+			         //    		setVariable("TRANSPORT_ROOM:Broken", 1);
+			         //    	}, 0),
+			         //    	action(() => getVariable("TRANSPORT_ROOM:Broken") == 1, ()=>{
+			         //    		displayDescriptionAction("Hullo!!!!");
+			         //    		// setVariable("TRANSPORT_ROOM:Broken", 1);
+			         //    	}, 0),
+			         //    	displayDescriptionAction("Default here")
+			        	// ])
 					])),
 
                	// Optional
                 // displayDescriptionAction("Something seems to have gone wrong...")
             ]),
+
+            // Owais : Sanity Check 
+            selector([
+            	action(() => getVariable("TRANSPORT_ROOM:Broken") == 0, ()=>{
+            		displayDescriptionAction("Oh No, the first thing broke. XYZ can fix it the best. But ABC is also a good person to ask for help");
+            		setVariable("TRANSPORT_ROOM:Broken", 1);
+            	}, 0),
+            	action(() => getVariable("TRANSPORT_ROOM:Broken") == 1, ()=>{
+            		displayDescriptionAction("Hullo!!!!");
+            		// setVariable("TRANSPORT_ROOM:Broken", 1);
+            	}, 0),
+            	displayDescriptionAction("Default here")
+        	]),
             
 		])
 	);
