@@ -447,6 +447,7 @@ var currentSelection;
 var yOffset = actionsPanel.y + 25;
 var yOffsetIncrement = 50;
 
+
 function displayTextAndActions() {
     context.clearRect(textPanel.x, textPanel.y, 500, 1000);
     yOffset = actionsPanel.y + 25;

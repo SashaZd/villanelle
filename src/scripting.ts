@@ -428,7 +428,8 @@ function runUserInteractionTrees() {
 export let displayDescriptionAction = (text: string) =>
     action(
         () => true,
-        () => userInteractionObject.text += "\n" + text, 0
+        () => userInteractionObject.text += "\n" + text,
+        0
     );
 export let displayActionEffectText = (text: string) => userInteractionObject.actionEffectsText += "\n" + text;
 
@@ -442,6 +443,14 @@ export let addUserAction = (text: string, effect: () => any) =>
         () => true,
         () => mapUserActionToTree(text, action(()=>true, effect, 0)), 0
     );
+
+
+
+
+
+//     return 
+// }
+
 
 function mapUserActionToTree(text: string, tree: Tick) {
     userActions[text] = tree;

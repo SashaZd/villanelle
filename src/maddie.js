@@ -42,7 +42,7 @@ wires1.setCurrentLocation(STORAGE);
 wires2.setCurrentLocation(MONITORING_ROOM);
 // setItemVariable(wires1, "currentLocation", STORAGE);
 // setItemVariable(wires2, "currentLocation", MONITORING_ROOM);
-var wiresCollected = scripting_1.setVariable("wiresCollected", 0);
+// var wiresCollected = setVariable("wiresCollected", 0);
 // // variables
 //Caleb
 // setAgentVariable(Caleb, "currentLocation", COCKPIT);
@@ -81,37 +81,67 @@ Eddie.setLastSawItemAtLocation(wires2, UNKNOWN);
 // Eddie.setLastSawPersonAtLocation(player, UNKNOWN);
 Beatrice.setLastSawItemAtLocation(wires2, UNKNOWN);
 // Beatrice.setLastSawPersonAtLocation(player, UNKNOWN);
-// Maddie: Change all the following for any items: 
-// getItemVariable(wires1, "currentLocation") ===> To
-// someItem.currentLocation
-// Maddie: Change all the following for any agents: 
-// getAgentVariable(Caleb, "currentLocation") ===> To
-// Caleb.currentLocation
+// Goals for the player
+// 0: Unknown/Initial State
+// 1: Found out about Fault:1. New Goal. (only occurs if status=0)
+// 2: Fixed Fault:1 (only occurs if status=1)
+// 3: Found out about Fault:2. New Goal (only occurs if status=2)
+// 4: Fixed Fault:2 (only occurs if status=3) 
+// etc. etc.
+var goal_broken_transport = scripting_1.setVariable("TRANSPORT_ROOM:Broken", 0); // max:4
 // // 2. Define BTs
 // // create ground actions
 // Todo from here
 // function function_name(argument) {
 // 	// body...
 // }
-// Q: Why is this an action? And not a variable?
-function setNextDestinationForAgent(agent, destinationNumber) {
-    if (destinationNumber === void 0) { destinationNumber = 0; }
-    var setRandNumber = scripting_1.action(function () { return true; }, function () { return agent.randNumber = scripting_1.getRandNumber(1, 11); }, 0);
-    // Sasha Todo: Work on using the Agent/Item types for destinations
-    var chooseENGINES = scripting_1.action(function () { return agent.randNumber == 1; }, function () { return agent.destination = ENGINES; }, 0);
-    var chooseSTORAGE = scripting_1.action(function () { return agent.randNumber == 2; }, function () { return agent.destination = STORAGE; }, 0);
-    var chooseDOCTORS_OFFICE = scripting_1.action(function () { return agent.randNumber == 3; }, function () { return agent.destination = DOCTORS_OFFICE; }, 0);
-    var chooseCOCKPIT = scripting_1.action(function () { return agent.randNumber == 4; }, function () { return agent.destination = COCKPIT; }, 0);
-    var chooseESCAPE_POD = scripting_1.action(function () { return agent.randNumber == 5; }, function () { return agent.destination = ESCAPE_POD; }, 0);
-    var chooseTRANSPORT_ROOM = scripting_1.action(function () { return agent.randNumber == 6; }, function () { return agent.destination = TRANSPORT_ROOM; }, 0);
-    var chooseMONITORING_ROOM = scripting_1.action(function () { return agent.randNumber == 7; }, function () { return agent.destination = MONITORING_ROOM; }, 0);
-    var chooseMAIN_AREA = scripting_1.action(function () { return agent.randNumber == 8; }, function () { return agent.destination = MAIN_AREA; }, 0);
-    var chooseFEM_BEDROOM = scripting_1.action(function () { return agent.randNumber == 9; }, function () { return agent.destination = FEM_BEDROOM; }, 0);
-    var chooseMALE_BEDROOM = scripting_1.action(function () { return agent.randNumber == 10; }, function () { return agent.destination = MALE_BEDROOM; }, 0);
-    var chooseBATHROOM = scripting_1.action(function () { return agent.randNumber == 11; }, function () { return agent.destination = BATHROOM; }, 0);
-    var setNextDestination = scripting_1.sequence([
-        setRandNumber,
-        scripting_1.selector([
+function setNextDestinationForAgent(agent, destination) {
+    if (destination === void 0) { destination = "UNKNOWN"; }
+    if (destination == "UNKNOWN") {
+        var setRandNumber = scripting_1.action(function () { return true; }, function () { return agent.randNumber = scripting_1.getRandNumber(1, 11); }, 0);
+        // Sasha Todo: Work on using the Agent/Item types for destinations
+        var chooseENGINES = scripting_1.action(function () { return agent.randNumber == 1; }, function () { return agent.destination = ENGINES; }, 0);
+        var chooseSTORAGE = scripting_1.action(function () { return agent.randNumber == 2; }, function () { return agent.destination = STORAGE; }, 0);
+        var chooseDOCTORS_OFFICE = scripting_1.action(function () { return agent.randNumber == 3; }, function () { return agent.destination = DOCTORS_OFFICE; }, 0);
+        var chooseCOCKPIT = scripting_1.action(function () { return agent.randNumber == 4; }, function () { return agent.destination = COCKPIT; }, 0);
+        var chooseESCAPE_POD = scripting_1.action(function () { return agent.randNumber == 5; }, function () { return agent.destination = ESCAPE_POD; }, 0);
+        var chooseTRANSPORT_ROOM = scripting_1.action(function () { return agent.randNumber == 6; }, function () { return agent.destination = TRANSPORT_ROOM; }, 0);
+        var chooseMONITORING_ROOM = scripting_1.action(function () { return agent.randNumber == 7; }, function () { return agent.destination = MONITORING_ROOM; }, 0);
+        var chooseMAIN_AREA = scripting_1.action(function () { return agent.randNumber == 8; }, function () { return agent.destination = MAIN_AREA; }, 0);
+        var chooseFEM_BEDROOM = scripting_1.action(function () { return agent.randNumber == 9; }, function () { return agent.destination = FEM_BEDROOM; }, 0);
+        var chooseMALE_BEDROOM = scripting_1.action(function () { return agent.randNumber == 10; }, function () { return agent.destination = MALE_BEDROOM; }, 0);
+        var chooseBATHROOM = scripting_1.action(function () { return agent.randNumber == 11; }, function () { return agent.destination = BATHROOM; }, 0);
+        var setNextDestination = scripting_1.sequence([
+            setRandNumber,
+            scripting_1.selector([
+                chooseENGINES,
+                chooseCOCKPIT,
+                chooseSTORAGE,
+                chooseDOCTORS_OFFICE,
+                chooseBATHROOM,
+                chooseMALE_BEDROOM,
+                chooseFEM_BEDROOM,
+                chooseMAIN_AREA,
+                chooseMONITORING_ROOM,
+                chooseTRANSPORT_ROOM,
+                chooseESCAPE_POD
+            ])
+        ]);
+        return setNextDestination;
+    }
+    else {
+        var chooseENGINES = scripting_1.action(function () { return destination == ENGINES; }, function () { return agent.destination = ENGINES; }, 0);
+        var chooseSTORAGE = scripting_1.action(function () { return destination == STORAGE; }, function () { return agent.destination = STORAGE; }, 0);
+        var chooseDOCTORS_OFFICE = scripting_1.action(function () { return destination == DOCTORS_OFFICE; }, function () { return agent.destination = DOCTORS_OFFICE; }, 0);
+        var chooseCOCKPIT = scripting_1.action(function () { return destination == COCKPIT; }, function () { return agent.destination = COCKPIT; }, 0);
+        var chooseESCAPE_POD = scripting_1.action(function () { return destination == ESCAPE_POD; }, function () { return agent.destination = ESCAPE_POD; }, 0);
+        var chooseTRANSPORT_ROOM = scripting_1.action(function () { return destination == TRANSPORT_ROOM; }, function () { return agent.destination = TRANSPORT_ROOM; }, 0);
+        var chooseMONITORING_ROOM = scripting_1.action(function () { return destination == MONITORING_ROOM; }, function () { return agent.destination = MONITORING_ROOM; }, 0);
+        var chooseMAIN_AREA = scripting_1.action(function () { return destination == MAIN_AREA; }, function () { return agent.destination = MAIN_AREA; }, 0);
+        var chooseFEM_BEDROOM = scripting_1.action(function () { return destination == FEM_BEDROOM; }, function () { return agent.destination = FEM_BEDROOM; }, 0);
+        var chooseMALE_BEDROOM = scripting_1.action(function () { return destination == MALE_BEDROOM; }, function () { return agent.destination = MALE_BEDROOM; }, 0);
+        var chooseBATHROOM = scripting_1.action(function () { return destination == BATHROOM; }, function () { return agent.destination = BATHROOM; }, 0);
+        var setNextDestination = scripting_1.selector([
             chooseENGINES,
             chooseCOCKPIT,
             chooseSTORAGE,
@@ -123,26 +153,14 @@ function setNextDestinationForAgent(agent, destinationNumber) {
             chooseMONITORING_ROOM,
             chooseTRANSPORT_ROOM,
             chooseESCAPE_POD
-        ])
-    ]);
-    return setNextDestination;
+        ]);
+        return setNextDestination;
+    }
 }
-// let atDestinationForAgent = function(agent: Agent){
-// 	let atDestination: Precondition = () => agent.destination == agent.currentLocation;
-// 	return atDestination;
-// }
 var setDestinationPrecondForAgent = function (agent) {
     var setDestinationPrecond = function () { return util_1.isUndefined(agent.destination) || agent.destination == agent.currentLocation; };
     return setDestinationPrecond;
 };
-// let atDestinationAgent = function(agent: Agent){
-// 	atDestination: Precondition = () => agent.destination == agent.currentLocation;  // getAgentVariable(agentName, "destination") == getAgentVariable(agentName, "currentLocation");
-// 	return atDestination;
-// }
-// // let 
-// let setDestinationPrecond = function(agent: Agent){
-// 	return () => agent.randNumber==0 || atDestination();
-// }
 // // create behavior trees
 var gotoNextLocationForAgent = function (agent) {
     return scripting_1.action(function () { return true; }, function () {
@@ -150,11 +168,6 @@ var gotoNextLocationForAgent = function (agent) {
         console.log(agent, " at: ", agent.currentLocation);
     }, 0);
 };
-// let gotoNextLocationCaleb = gotoNextLocationAgent(Caleb);
-// let gotoNextLocationQuinn = gotoNextLocationAgent(Quinn);
-// let gotoNextLocationMark = gotoNextLocationAgent(Mark);
-// let gotoNextLocationEddie = gotoNextLocationAgent(Eddie);
-// let gotoNextLocationBeatrice = gotoNextLocationAgent(Beatrice);
 var lastSeenByAgent = function (agent) {
     return scripting_1.sequence([
         scripting_1.selector([
@@ -208,11 +221,6 @@ var lastSeenByAgent = function (agent) {
         ])
     ]);
 };
-// let lastSeenByCaleb = lastSeenByAgent(Caleb)
-// let lastSeenByQuinn = lastSeenByAgent(Quinn)
-// let lastSeenByMark = lastSeenByAgent(Mark)
-// let lastSeenByEddie = lastSeenByAgent(Eddie)
-// let lastSeenByBeatrice = lastSeenByAgent(Beatrice)
 // let findItem = action(
 //     () => getAgentVariable(Caleb, 'currentLocation') == getItemVariable(wires1, "currentLocation"),
 //     () => {
@@ -259,14 +267,6 @@ var searchForAgent = function (agent) {
     ]);
     return search;
 };
-// let search = sequence([
-//         selector([
-//             guard(setDestinationPrecond, setNextDestination),
-//             action(() => true, () => {
-//             },0)
-//         ]),
-//         gotoNextLocationFor,
-//     ]);
 var CalebBT = scripting_1.sequence([
     lastSeenByAgent(Caleb),
     scripting_1.sequence([
@@ -305,76 +305,217 @@ scripting_1.attachTreeToAgent(Eddie, EddieBT);
 scripting_1.attachTreeToAgent(Beatrice, BeatriceBT);
 // // 3. Construct story
 // // create user actions
+scripting_1.setVariable("theStart", 0);
+scripting_1.setVariable("EngineStart", 0);
+scripting_1.setVariable("StorageStart", 0);
+scripting_1.setVariable("DrOfficeStart", 0);
+scripting_1.setVariable("CockpitStart", 0);
+scripting_1.setVariable("MonitoringStart", 0);
+scripting_1.setVariable("TransportStart", 0);
+scripting_1.setVariable("EscapeStart", 0);
 var startStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == MAIN_AREA; }, scripting_1.sequence([
-    scripting_1.displayDescriptionAction("You enter the ship's main area."),
-    scripting_1.addUserAction("Go forward to enter the engine room.", function () { return scripting_1.setVariable(playerLocation, ENGINES); }),
-    scripting_1.addUserAction("Go east to enter the doctor's office.", function () { return scripting_1.setVariable(playerLocation, DOCTORS_OFFICE); }),
-    scripting_1.addUserAction("Go west to enter the females' bedroom.", function () { return scripting_1.setVariable(playerLocation, FEM_BEDROOM); }),
-    scripting_1.addUserAction("Go west to enter the bathroom.", function () { return scripting_1.setVariable(playerLocation, BATHROOM); }),
-    scripting_1.addUserAction("Go west to enter the males' bedroom.", function () { return scripting_1.setVariable(playerLocation, MALE_BEDROOM); }),
-    scripting_1.addUserAction("Go south to enter the escape pod.", function () { return scripting_1.setVariable(playerLocation, ESCAPE_POD); }),
-    scripting_1.addUserAction("Go into the transport room.", function () { return scripting_1.setVariable(playerLocation, TRANSPORT_ROOM); }),
+    // displayDescriptionAction("You enter the ship's main area."),
+    scripting_1.selector([
+        scripting_1.guard(function () { return scripting_1.getVariable("theStart") == 0; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+            scripting_1.addUserAction("Next.", function () {
+                scripting_1.setVariable("theStart", 1);
+            })
+        ])),
+        scripting_1.guard(function () { return scripting_1.getVariable("theStart") == 1; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("You enter the ship's main area."),
+            scripting_1.addUserAction("Go north to enter the engine room.", function () { return scripting_1.setVariable(playerLocation, ENGINES); }),
+            scripting_1.addUserAction("Go northeast to enter the storage room.", function () { return scripting_1.setVariable(playerLocation, STORAGE); }),
+            scripting_1.addUserAction("Go east to enter the cockpit.", function () { return scripting_1.setVariable(playerLocation, COCKPIT); }),
+            scripting_1.addUserAction("Go southeast to enter the doctor's office.", function () { return scripting_1.setVariable(playerLocation, DOCTORS_OFFICE); }),
+            scripting_1.addUserAction("Go south into the monitoring room.", function () { return scripting_1.setVariable(playerLocation, MONITORING_ROOM); }),
+            scripting_1.addUserAction("Go south into the transport room.", function () { return scripting_1.setVariable(playerLocation, TRANSPORT_ROOM); }),
+            scripting_1.addUserAction("Go southwest to enter the escape pod.", function () { return scripting_1.setVariable(playerLocation, ESCAPE_POD); }),
+            scripting_1.addUserAction("Go west to enter the bathroom.", function () { return scripting_1.setVariable(playerLocation, BATHROOM); }),
+        ])),
+        // Optional
+        scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
+    ]),
 ]));
 scripting_1.addUserInteractionTree(startStateBT);
 var bcStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == ENGINES; }, scripting_1.sequence([
-    scripting_1.displayDescriptionAction("You enter the engine room."),
-    scripting_1.addUserAction("Head east into the storage room.", function () { return scripting_1.setVariable(playerLocation, STORAGE); }),
-    scripting_1.addUserAction("Return to the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+    scripting_1.selector([
+        scripting_1.guard(function () { return scripting_1.getVariable("EngineStart") == 0; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("The engine room is where Beatrice spends most of her time. She’s a natural when it comes to problem solving, but her unapproachable and unfriendly personality turned many influential commanders away from her. Despite her personality, her engineering skills are second-to-none...granted she is the only engineer left."),
+            scripting_1.addUserAction("Next.", function () {
+                scripting_1.setVariable("EngineStart", 1);
+            })
+        ])),
+        scripting_1.guard(function () { return scripting_1.getVariable("EngineStart") == 1; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("You enter the engine room."),
+            scripting_1.addUserAction("Head east into the storage room.", function () { return scripting_1.setVariable(playerLocation, STORAGE); }),
+            scripting_1.addUserAction("Return to the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+        ])),
+        //Optional
+        scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
+    ]),
 ]));
 scripting_1.addUserInteractionTree(bcStateBT);
 var brStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == STORAGE; }, scripting_1.sequence([
-    scripting_1.displayDescriptionAction("You moved into the storage room."),
-    scripting_1.addUserAction("Enter the doctor's office.", function () { return scripting_1.setVariable(playerLocation, DOCTORS_OFFICE); }),
-    scripting_1.addUserAction("Move back into the engine room.", function () { return scripting_1.setVariable(playerLocation, ENGINES); }),
+    scripting_1.selector([
+        scripting_1.guard(function () { return scripting_1.getVariable("StorageStart") == 0; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("The storage room is where Eddie spends his time and stores his janitor equipment. Old as he is, he still does his best to contribute to the team in whatever way he can, despite lacking technical skills the other crewmates employ. Although he is a well-known hero among military personnel, his crewmates continue to remain oblivious to the fact that the man who scrubs their toilets had been one of the most accomplished military officers the universe had ever seen."),
+            scripting_1.addUserAction("Next.", function () {
+                scripting_1.setVariable("StorageStart", 1);
+            })
+        ])),
+        scripting_1.guard(function () { return scripting_1.getVariable("StorageStart") == 1; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("You moved into the storage room."),
+            scripting_1.addUserAction("Move into the engine room.", function () { return scripting_1.setVariable(playerLocation, ENGINES); }),
+            scripting_1.addUserAction("Return to the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+        ])),
+        //Optional
+        scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
+    ]),
 ]));
 scripting_1.addUserInteractionTree(brStateBT);
 var quarters1BT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == DOCTORS_OFFICE; }, scripting_1.sequence([
-    scripting_1.displayDescriptionAction("You enter the doctor's office."),
-    scripting_1.addUserAction("Return to the storage room.", function () { return scripting_1.setVariable(playerLocation, STORAGE); }),
-    scripting_1.addUserAction("Move into the cockpit.", function () { return scripting_1.setVariable(playerLocation, COCKPIT); }),
-    scripting_1.addUserAction("Go to the monitoring room.", function () { return scripting_1.setVariable(playerLocation, MONITORING_ROOM); }),
-    scripting_1.addUserAction("Return to the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+    scripting_1.selector([
+        scripting_1.guard(function () { return scripting_1.getVariable("DrOfficeStart") == 0; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("Dr. Quinn spends a lot of time in her office looking after patients. She puts all others above herself; she is constantly concerned with the well-being of her crewmates. The prospect of her patients dying still keeps her up at night, but her determination to save as many people as she can is what keeps her going."),
+            scripting_1.addUserAction("Next.", function () {
+                scripting_1.setVariable("DrOfficeStart", 1);
+            })
+        ])),
+        scripting_1.guard(function () { return scripting_1.getVariable("DrOfficeStart") == 1; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("You enter the doctor's office."),
+            scripting_1.addUserAction("Move into the cockpit.", function () { return scripting_1.setVariable(playerLocation, COCKPIT); }),
+            scripting_1.addUserAction("Go to the monitoring room.", function () { return scripting_1.setVariable(playerLocation, MONITORING_ROOM); }),
+            scripting_1.addUserAction("Return to the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+        ])),
+        // Optional
+        scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
+    ]),
 ]));
 scripting_1.addUserInteractionTree(quarters1BT);
 var mrStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == COCKPIT; }, scripting_1.sequence([
-    scripting_1.displayDescriptionAction("You move forward into the cockpit."),
-    scripting_1.addUserAction("Return to the doctor's office.", function () { return scripting_1.setVariable(playerLocation, DOCTORS_OFFICE); }),
+    scripting_1.selector([
+        scripting_1.guard(function () { return scripting_1.getVariable("CockpitStart") == 0; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("The cockpit is where Taylor pilots the ship, but Caleb spends a lot of his time there as well. Caleb runs things very differently from Taylor; he is a demanding leader who harshly criticizes his crewmates when failures occur. He secretly loathes Taylor; their personalities clash all-too-frequently, and their position on the ship despite his older age is a constant source of anger to the officer."),
+            scripting_1.addUserAction("Next.", function () {
+                scripting_1.setVariable("CockpitStart", 1);
+            })
+        ])),
+        scripting_1.guard(function () { return scripting_1.getVariable("CockpitStart") == 1; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("You move forward into the cockpit."),
+            scripting_1.addUserAction("Move to the doctor's office.", function () { return scripting_1.setVariable(playerLocation, DOCTORS_OFFICE); }),
+            scripting_1.addUserAction("Return to the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+        ])),
+        // Optional
+        scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
+    ]),
 ]));
 scripting_1.addUserInteractionTree(mrStateBT);
 var quarters2BT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == MONITORING_ROOM; }, scripting_1.sequence([
-    scripting_1.displayDescriptionAction("You enter the monitoring room."),
-    scripting_1.addUserAction("Return to the doctor's office.", function () { return scripting_1.setVariable(playerLocation, DOCTORS_OFFICE); }),
-    scripting_1.addUserAction("Go to the transport room.", function () { return scripting_1.setVariable(playerLocation, TRANSPORT_ROOM); }),
+    scripting_1.selector([
+        scripting_1.guard(function () { return scripting_1.getVariable("MonitoringStart") == 0; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("The monitoring room is purposed to see into the transport room, thus watching for signs of trouble with the transporter."),
+            scripting_1.addUserAction("Next.", function () {
+                scripting_1.setVariable("MonitoringStart", 1);
+            })
+        ])),
+        scripting_1.guard(function () { return scripting_1.getVariable("MonitoringStart") == 1; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("You enter the monitoring room."),
+            scripting_1.addUserAction("Move to the doctor's office.", function () { return scripting_1.setVariable(playerLocation, DOCTORS_OFFICE); }),
+            scripting_1.addUserAction("Go to the transport room.", function () { return scripting_1.setVariable(playerLocation, TRANSPORT_ROOM); }),
+            scripting_1.addUserAction("Return to the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+        ])),
+        // Optional
+        scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
+    ]),
 ]));
 scripting_1.addUserInteractionTree(quarters2BT);
 var medicalBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == TRANSPORT_ROOM; }, scripting_1.sequence([
-    scripting_1.displayDescriptionAction("You enter the transport room where the teleporter is located."),
-    scripting_1.addUserAction("Exit to the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
-    scripting_1.addUserAction("Return to the monitoring room.", function () { return scripting_1.setVariable(playerLocation, MONITORING_ROOM); }),
+    scripting_1.selector([
+        scripting_1.guard(function () { return scripting_1.getVariable("TransportStart") == 0; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("Where the transporter is located and where the failure occurred. Mark often works in here. Mark is an older crewmate who avoids the spotlight like the plague. His anxiety levels shot up rapidly after the failure, and he is excessively worried that the rest of the crew blames the failure on him."),
+            scripting_1.addUserAction("Next.", function () {
+                scripting_1.setVariable("TransportStart", 1);
+                console.log("This is: ", scripting_1.getVariable(goal_broken_transport));
+            })
+        ])),
+        scripting_1.guard(function () { return scripting_1.getVariable("TransportStart") == 1; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("You enter the transport room where the teleporter is located."),
+            scripting_1.addUserAction("Move into the monitoring room.", function () { return scripting_1.setVariable(playerLocation, MONITORING_ROOM); }),
+            scripting_1.addUserAction("Exit to the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+            scripting_1.selector([
+                scripting_1.action(function () { return scripting_1.getVariable("TRANSPORT_ROOM:Broken") == 0; }, function () {
+                    scripting_1.displayDescriptionAction("Oh No, the first thing broke. XYZ can fix it the best. But ABC is also a good person to ask for help");
+                    scripting_1.setVariable("TRANSPORT_ROOM:Broken", 1);
+                }, 0),
+                scripting_1.displayDescriptionAction("Default here"),
+            ])
+        ])),
+    ]),
 ]));
 scripting_1.addUserInteractionTree(medicalBT);
 var labBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == ESCAPE_POD; }, scripting_1.sequence([
-    scripting_1.displayDescriptionAction("You enter the escape pod."),
-    scripting_1.addUserAction("Exit into the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+    scripting_1.selector([
+        scripting_1.guard(function () { return scripting_1.getVariable("EscapeStart") == 0; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("There is only one escape pod aboard this ship. If any crewmate becomes too fearful of their current situation, they will attempt to leave in it."),
+            scripting_1.addUserAction("Next.", function () {
+                scripting_1.setVariable("EscapeStart", 1);
+            })
+        ])),
+        scripting_1.guard(function () { return scripting_1.getVariable("EscapeStart") == 1; }, scripting_1.sequence([
+            scripting_1.displayDescriptionAction("You enter the escape pod."),
+            scripting_1.addUserAction("Return to the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+        ])),
+        // Optional
+        scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
+    ]),
 ]));
 scripting_1.addUserInteractionTree(labBT);
 var trStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == FEM_BEDROOM; }, scripting_1.sequence([
+    // selector([
+    //              guard(() => getVariable("theStart") == 0,
+    //                  sequence([
+    //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+    //                      addUserAction("Next.", () => {
+    //                          setVariable("theStart", 1);
+    //                      })
+    //                  ])),
+    //             	guard(() => getVariable("theStart") == 1,
+    //                  sequence([
     scripting_1.displayDescriptionAction("You move into the females' bedroom."),
-    scripting_1.addUserAction("Move south to the bathroom.", function () { return scripting_1.setVariable(playerLocation, BATHROOM); }),
-    scripting_1.addUserAction("Exit into the main room.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+    scripting_1.addUserAction("Return to the bathroom.", function () { return scripting_1.setVariable(playerLocation, BATHROOM); }),
 ]));
 scripting_1.addUserInteractionTree(trStateBT);
 var tcStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == BATHROOM; }, scripting_1.sequence([
+    // selector([
+    //              guard(() => getVariable("theStart") == 0,
+    //                  sequence([
+    //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+    //                      addUserAction("Next.", () => {
+    //                          setVariable("theStart", 1);
+    //                      })
+    //                  ])),
+    //             	guard(() => getVariable("theStart") == 1,
+    //                  sequence([
     scripting_1.displayDescriptionAction("You move into the bathroom."),
     scripting_1.addUserAction("Move south into the males' bedroom.", function () { return scripting_1.setVariable(playerLocation, MALE_BEDROOM); }),
-    scripting_1.addUserAction("Enter the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
     scripting_1.addUserAction("Move north into the females' bedroom.", function () { return scripting_1.setVariable(playerLocation, FEM_BEDROOM); }),
+    scripting_1.addUserAction("Enter the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
 ]));
 scripting_1.addUserInteractionTree(tcStateBT);
 var tlStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == MALE_BEDROOM; }, scripting_1.sequence([
+    // selector([
+    //              guard(() => getVariable("theStart") == 0,
+    //                  sequence([
+    //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+    //                      addUserAction("Next.", () => {
+    //                          setVariable("theStart", 1);
+    //                      })
+    //                  ])),
+    //             	guard(() => getVariable("theStart") == 1,
+    //                  sequence([
     scripting_1.displayDescriptionAction("You move into the males' bedroom."),
-    scripting_1.addUserAction("Enter the bathroom.", function () { return scripting_1.setVariable(playerLocation, BATHROOM); }),
-    scripting_1.addUserAction("Enter the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+    scripting_1.addUserAction("Return to bathroom.", function () { return scripting_1.setVariable(playerLocation, BATHROOM); }),
 ]));
 scripting_1.addUserInteractionTree(tlStateBT);
 var wires1BT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == wires1.currentLocation; }, //  getItemVariable(wires1, "currentLocation")
@@ -404,7 +545,7 @@ scripting_1.initialize();
 var userInteractionObject = scripting_1.getUserInteractionObject();
 // //RENDERING-----
 var displayPanel = { x: 250, y: 0 };
-var textPanel = { x: 500, y: 501 };
+var textPanel = { x: 270, y: 501 };
 var actionsPanel = { x: 520, y: 550 };
 var canvas = document.getElementById('display');
 var context = canvas.getContext('2d');
@@ -432,7 +573,7 @@ var mapPositions = {
     "COCKPIT": { x: 860, y: 230 },
     "STORAGE": { x: 545, y: 110 },
     "DOCTORS OFFICE": { x: 725, y: 350 },
-    "MAIN AREA": { x: 465, y: 240 },
+    "MAIN AREA": { x: 480, y: 240 },
     "ESCAPE POD": { x: 224, y: 408 },
     "TRANSPORT ROOM": { x: 370, y: 360 },
     "MONITORING ROOM": { x: 535, y: 360 },
@@ -465,8 +606,8 @@ function displayBeatrice() {
     var currLocation = Beatrice.currentLocation;
     context.drawImage(beatriceImage, displayPanel.x + mapPositions[currLocation].x, displayPanel.y + mapPositions[currLocation].y, 50, 50);
 }
-spaceshipImage.src = "../images/ship_maybe.png";
-playerImage.src = "../images/Taylor.png";
+spaceshipImage.src = "../images/ship.png";
+playerImage.src = "../images/Taylor3.png";
 calebImage.src = "../images/Caleb.png";
 quinnImage.src = "../images/Quinn.png";
 markImage.src = "../images/Mark.png";
@@ -475,14 +616,41 @@ beatriceImage.src = "../images/Beatrice.png";
 var currentSelection;
 var yOffset = actionsPanel.y + 25;
 var yOffsetIncrement = 25;
+function wrapText(text) {
+    console.log("Wrap Text");
+    var wa = text.split(" "), phraseArray = [], lastPhrase = wa[0], measure = 0, splitChar = " ";
+    if (wa.length <= 1) {
+        return wa;
+    }
+    for (var i = 1; i < wa.length; i++) {
+        var w = wa[i];
+        measure = context.measureText(lastPhrase + splitChar + w).width;
+        if (measure < 1000) {
+            lastPhrase += (splitChar + w);
+        }
+        else {
+            phraseArray.push(lastPhrase);
+            lastPhrase = w;
+        }
+        if (i === wa.length - 1) {
+            phraseArray.push(lastPhrase);
+            break;
+        }
+    }
+    return phraseArray;
+}
 function displayTextAndActions() {
     context.clearRect(textPanel.x, textPanel.y, 500, 1000);
-    yOffset = actionsPanel.y + 25;
     context.font = "15pt Calibri";
     context.fillStyle = 'pink';
     console.log("Actions effect text: " + userInteractionObject.actionEffectsText);
-    var textToDisplay = userInteractionObject.actionEffectsText.length != 0 ? userInteractionObject.actionEffectsText : userInteractionObject.text;
-    context.fillText(textToDisplay, textPanel.x, textPanel.y + 20);
+    var textToDisplay = userInteractionObject.actionEffectsText.length != 0 ? wrapText(userInteractionObject.actionEffectsText) : wrapText(userInteractionObject.text);
+    // console.log(textToDisplay);
+    actionsPanel.y = textToDisplay.length * 25 + textPanel.y + 20;
+    yOffset = actionsPanel.y + 25;
+    for (var i = 0; i < textToDisplay.length; i++) {
+        context.fillText(textToDisplay[i], textPanel.x, textPanel.y + 25 * i + 20);
+    }
     context.font = "15pt Calibri";
     context.fillStyle = 'white';
     for (var i = 0; i < userInteractionObject.userActionsText.length; i++) {
