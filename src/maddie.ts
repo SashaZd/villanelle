@@ -559,7 +559,8 @@ var TransportBT = guard(
                         addUserAction("Next.", () => {
                             setVariable("TransportStart", 1);
                             console.log("This is: ", getVariable(goal_broken_transport))
-                        })
+                            console.log(getVariable("TRANSPORT_ROOM:Broken"), getVariable("TRANSPORT_ROOM:Broken") == 0)
+                        }),
                     ])),
 
                	guard(() => getVariable("TransportStart") == 1,
@@ -568,36 +569,43 @@ var TransportBT = guard(
 						addUserAction("Move into the monitoring room.", () => setVariable(playerLocation, MONITORING_ROOM)),
 						addUserAction("Exit to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
 
-						// Owais : Sanity Check 
-			            selector([
-			            	action(() => getVariable("TRANSPORT_ROOM:Broken") == 0, ()=>{
-			            		displayDescriptionAction("There might be a problem with the teleporter software. Maybe Mark could check it out.");
-			            		setVariable("TRANSPORT_ROOM:Broken", 1);
-			            	}, 0),
-			            	action(() => getVariable("TRANSPORT_ROOM:Broken") == 1, ()=>{
-			            		displayDescriptionAction("You need to find someone to look at the teleporter sofware.");
-			            		// setVariable("TRANSPORT_ROOM:Broken", 1);
-			            	}, 0),
-			            	displayDescriptionAction("Default here")
-			        	])
-					])),
+						// Goal options for the room -> Only showing these when the main help text is off. 
+						selector([
+			            	guard(() => getVariable("TRANSPORT_ROOM:Broken") == 0,
+			                    sequence([
+			                        displayDescriptionAction("Oh No, the first thing broke. XYZ can fix it the best. But ABC is also a good person to ask for help"),
+			                        action(() => true, ()=>{
+					            		setVariable("TRANSPORT_ROOM:Broken", 1);
+					            	}, 0)
+			                    ])
+			                ),
+			                guard(() => getVariable("TRANSPORT_ROOM:Broken") == 1,
+			                    sequence([
+			                        displayDescriptionAction("The first thing is still broken. Go find someone to fix it.")
+			                    ])
+			                ),
+			                guard(() => getVariable("TRANSPORT_ROOM:Broken") == 2,
+			                    sequence([
+			                        displayDescriptionAction("The first thing was fixed, but now the second thing is broken? Go find EFG to fix the same.")
+			                    ])
+			                ),
+						])
+					]),
+				)
 
                	// Optional
                 // displayDescriptionAction("Something seems to have gone wrong...")
             ]),
 
             // Owais : Sanity Check 
-            selector([
-            	action(() => getVariable("TRANSPORT_ROOM:Broken") == 0, ()=>{
-            		displayDescriptionAction("Oh No, the first thing broke. XYZ can fix it the best. But ABC is also a good person to ask for help");
-            		setVariable("TRANSPORT_ROOM:Broken", 1);
-            	}, 0),
-            	action(() => getVariable("TRANSPORT_ROOM:Broken") == 1, ()=>{
-            		displayDescriptionAction("Hullo!!!!");
-            		// setVariable("TRANSPORT_ROOM:Broken", 1);
-            	}, 0),
-            	displayDescriptionAction("Default here")
-        	]),
+            
+
+            	// action(() => getVariable("TRANSPORT_ROOM:Broken") == 1, ()=>{
+            	// 	displayDescriptionAction("This room is still broken. Go find someone to fix it.");
+            	// }, 0),
+
+            	// displayDescriptionAction("Default here")
+        	
             
 		])
 	);

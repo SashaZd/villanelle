@@ -313,7 +313,7 @@ scripting_1.setVariable("CockpitStart", 0);
 scripting_1.setVariable("MonitoringStart", 0);
 scripting_1.setVariable("TransportStart", 0);
 scripting_1.setVariable("EscapeStart", 0);
-var startStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == MAIN_AREA; }, scripting_1.sequence([
+var MainBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == MAIN_AREA; }, scripting_1.sequence([
     // displayDescriptionAction("You enter the ship's main area."),
     scripting_1.selector([
         scripting_1.guard(function () { return scripting_1.getVariable("theStart") == 0; }, scripting_1.sequence([
@@ -337,8 +337,8 @@ var startStateBT = scripting_1.guard(function () { return scripting_1.getVariabl
         scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
     ]),
 ]));
-scripting_1.addUserInteractionTree(startStateBT);
-var bcStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == ENGINES; }, scripting_1.sequence([
+scripting_1.addUserInteractionTree(MainBT);
+var EngineBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == ENGINES; }, scripting_1.sequence([
     scripting_1.selector([
         scripting_1.guard(function () { return scripting_1.getVariable("EngineStart") == 0; }, scripting_1.sequence([
             scripting_1.displayDescriptionAction("The engine room is where Beatrice spends most of her time. She’s a natural when it comes to problem solving, but her unapproachable and unfriendly personality turned many influential commanders away from her. Despite her personality, her engineering skills are second-to-none...granted she is the only engineer left."),
@@ -355,8 +355,8 @@ var bcStateBT = scripting_1.guard(function () { return scripting_1.getVariable(p
         scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
     ]),
 ]));
-scripting_1.addUserInteractionTree(bcStateBT);
-var brStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == STORAGE; }, scripting_1.sequence([
+scripting_1.addUserInteractionTree(EngineBT);
+var StorageBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == STORAGE; }, scripting_1.sequence([
     scripting_1.selector([
         scripting_1.guard(function () { return scripting_1.getVariable("StorageStart") == 0; }, scripting_1.sequence([
             scripting_1.displayDescriptionAction("The storage room is where Eddie spends his time and stores his janitor equipment. Old as he is, he still does his best to contribute to the team in whatever way he can, despite lacking technical skills the other crewmates employ. Although he is a well-known hero among military personnel, his crewmates continue to remain oblivious to the fact that the man who scrubs their toilets had been one of the most accomplished military officers the universe had ever seen."),
@@ -373,8 +373,8 @@ var brStateBT = scripting_1.guard(function () { return scripting_1.getVariable(p
         scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
     ]),
 ]));
-scripting_1.addUserInteractionTree(brStateBT);
-var quarters1BT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == DOCTORS_OFFICE; }, scripting_1.sequence([
+scripting_1.addUserInteractionTree(StorageBT);
+var DrOfficeBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == DOCTORS_OFFICE; }, scripting_1.sequence([
     scripting_1.selector([
         scripting_1.guard(function () { return scripting_1.getVariable("DrOfficeStart") == 0; }, scripting_1.sequence([
             scripting_1.displayDescriptionAction("Dr. Quinn spends a lot of time in her office looking after patients. She puts all others above herself; she is constantly concerned with the well-being of her crewmates. The prospect of her patients dying still keeps her up at night, but her determination to save as many people as she can is what keeps her going."),
@@ -392,8 +392,8 @@ var quarters1BT = scripting_1.guard(function () { return scripting_1.getVariable
         scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
     ]),
 ]));
-scripting_1.addUserInteractionTree(quarters1BT);
-var mrStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == COCKPIT; }, scripting_1.sequence([
+scripting_1.addUserInteractionTree(DrOfficeBT);
+var CockpitBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == COCKPIT; }, scripting_1.sequence([
     scripting_1.selector([
         scripting_1.guard(function () { return scripting_1.getVariable("CockpitStart") == 0; }, scripting_1.sequence([
             scripting_1.displayDescriptionAction("The cockpit is where Taylor pilots the ship, but Caleb spends a lot of his time there as well. Caleb runs things very differently from Taylor; he is a demanding leader who harshly criticizes his crewmates when failures occur. He secretly loathes Taylor; their personalities clash all-too-frequently, and their position on the ship despite his older age is a constant source of anger to the officer."),
@@ -410,8 +410,8 @@ var mrStateBT = scripting_1.guard(function () { return scripting_1.getVariable(p
         scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
     ]),
 ]));
-scripting_1.addUserInteractionTree(mrStateBT);
-var quarters2BT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == MONITORING_ROOM; }, scripting_1.sequence([
+scripting_1.addUserInteractionTree(CockpitBT);
+var MonitoringBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == MONITORING_ROOM; }, scripting_1.sequence([
     scripting_1.selector([
         scripting_1.guard(function () { return scripting_1.getVariable("MonitoringStart") == 0; }, scripting_1.sequence([
             scripting_1.displayDescriptionAction("The monitoring room is purposed to see into the transport room, thus watching for signs of trouble with the transporter."),
@@ -429,32 +429,40 @@ var quarters2BT = scripting_1.guard(function () { return scripting_1.getVariable
         scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
     ]),
 ]));
-scripting_1.addUserInteractionTree(quarters2BT);
-var medicalBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == TRANSPORT_ROOM; }, scripting_1.sequence([
+scripting_1.addUserInteractionTree(MonitoringBT);
+var TransportBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == TRANSPORT_ROOM; }, scripting_1.sequence([
     scripting_1.selector([
         scripting_1.guard(function () { return scripting_1.getVariable("TransportStart") == 0; }, scripting_1.sequence([
             scripting_1.displayDescriptionAction("Where the transporter is located and where the failure occurred. Mark often works in here. Mark is an older crewmate who avoids the spotlight like the plague. His anxiety levels shot up rapidly after the failure, and he is excessively worried that the rest of the crew blames the failure on him."),
             scripting_1.addUserAction("Next.", function () {
                 scripting_1.setVariable("TransportStart", 1);
                 console.log("This is: ", scripting_1.getVariable(goal_broken_transport));
-            })
+                console.log(scripting_1.getVariable("TRANSPORT_ROOM:Broken"), scripting_1.getVariable("TRANSPORT_ROOM:Broken") == 0);
+            }),
         ])),
         scripting_1.guard(function () { return scripting_1.getVariable("TransportStart") == 1; }, scripting_1.sequence([
             scripting_1.displayDescriptionAction("You enter the transport room where the teleporter is located."),
             scripting_1.addUserAction("Move into the monitoring room.", function () { return scripting_1.setVariable(playerLocation, MONITORING_ROOM); }),
             scripting_1.addUserAction("Exit to the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
+            // Goal options for the room -> Only showing these when the main help text is off. 
             scripting_1.selector([
-                scripting_1.action(function () { return scripting_1.getVariable("TRANSPORT_ROOM:Broken") == 0; }, function () {
-                    scripting_1.displayDescriptionAction("Oh No, the first thing broke. XYZ can fix it the best. But ABC is also a good person to ask for help");
-                    scripting_1.setVariable("TRANSPORT_ROOM:Broken", 1);
-                }, 0),
-                scripting_1.displayDescriptionAction("Default here"),
+                scripting_1.guard(function () { return scripting_1.getVariable("TRANSPORT_ROOM:Broken") == 0; }, scripting_1.sequence([
+                    scripting_1.displayDescriptionAction("Oh No, the first thing broke. XYZ can fix it the best. But ABC is also a good person to ask for help"),
+                    scripting_1.action(function () { return true; }, function () {
+                        scripting_1.setVariable("TRANSPORT_ROOM:Broken", 1);
+                    }, 0)
+                ])),
+                scripting_1.guard(function () { return scripting_1.getVariable("TRANSPORT_ROOM:Broken") == 1; }, scripting_1.sequence([
+                    scripting_1.displayDescriptionAction("The first thing is still broken. Go find someone to fix it.")
+                ]))
             ])
-        ])),
+        ]))
+        // Optional
+        // displayDescriptionAction("Something seems to have gone wrong...")
     ]),
 ]));
-scripting_1.addUserInteractionTree(medicalBT);
-var labBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == ESCAPE_POD; }, scripting_1.sequence([
+scripting_1.addUserInteractionTree(TransportBT);
+var EscapePodBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == ESCAPE_POD; }, scripting_1.sequence([
     scripting_1.selector([
         scripting_1.guard(function () { return scripting_1.getVariable("EscapeStart") == 0; }, scripting_1.sequence([
             scripting_1.displayDescriptionAction("There is only one escape pod aboard this ship. If any crewmate becomes too fearful of their current situation, they will attempt to leave in it."),
@@ -470,8 +478,8 @@ var labBT = scripting_1.guard(function () { return scripting_1.getVariable(playe
         scripting_1.displayDescriptionAction("Something seems to have gone wrong...")
     ]),
 ]));
-scripting_1.addUserInteractionTree(labBT);
-var trStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == FEM_BEDROOM; }, scripting_1.sequence([
+scripting_1.addUserInteractionTree(EscapePodBT);
+var FBedroomBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == FEM_BEDROOM; }, scripting_1.sequence([
     // selector([
     //              guard(() => getVariable("theStart") == 0,
     //                  sequence([
@@ -485,8 +493,8 @@ var trStateBT = scripting_1.guard(function () { return scripting_1.getVariable(p
     scripting_1.displayDescriptionAction("You move into the females' bedroom."),
     scripting_1.addUserAction("Return to the bathroom.", function () { return scripting_1.setVariable(playerLocation, BATHROOM); }),
 ]));
-scripting_1.addUserInteractionTree(trStateBT);
-var tcStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == BATHROOM; }, scripting_1.sequence([
+scripting_1.addUserInteractionTree(FBedroomBT);
+var BathroomBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == BATHROOM; }, scripting_1.sequence([
     // selector([
     //              guard(() => getVariable("theStart") == 0,
     //                  sequence([
@@ -502,8 +510,8 @@ var tcStateBT = scripting_1.guard(function () { return scripting_1.getVariable(p
     scripting_1.addUserAction("Move north into the females' bedroom.", function () { return scripting_1.setVariable(playerLocation, FEM_BEDROOM); }),
     scripting_1.addUserAction("Enter the main area.", function () { return scripting_1.setVariable(playerLocation, MAIN_AREA); }),
 ]));
-scripting_1.addUserInteractionTree(tcStateBT);
-var tlStateBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == MALE_BEDROOM; }, scripting_1.sequence([
+scripting_1.addUserInteractionTree(BathroomBT);
+var MBedroomBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == MALE_BEDROOM; }, scripting_1.sequence([
     // selector([
     //              guard(() => getVariable("theStart") == 0,
     //                  sequence([
@@ -517,7 +525,7 @@ var tlStateBT = scripting_1.guard(function () { return scripting_1.getVariable(p
     scripting_1.displayDescriptionAction("You move into the males' bedroom."),
     scripting_1.addUserAction("Return to bathroom.", function () { return scripting_1.setVariable(playerLocation, BATHROOM); }),
 ]));
-scripting_1.addUserInteractionTree(tlStateBT);
+scripting_1.addUserInteractionTree(MBedroomBT);
 var wires1BT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == wires1.currentLocation; }, //  getItemVariable(wires1, "currentLocation")
 scripting_1.sequence([
     scripting_1.displayDescriptionAction("You notice wires on the ground."),
