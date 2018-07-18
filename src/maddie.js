@@ -317,7 +317,7 @@ var MainBT = scripting_1.guard(function () { return scripting_1.getVariable(play
     // displayDescriptionAction("You enter the ship's main area."),
     scripting_1.selector([
         scripting_1.guard(function () { return scripting_1.getVariable("theStart") == 0; }, scripting_1.sequence([
-            scripting_1.displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
+            scripting_1.displayDescriptionAction("It was a simple mission: land on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, their crewmates yelling at each other. There is only one escape pod remaining. As commander, you are equipped with a special ineractive map allowing you to see the positions of your crewmates at all times. You must utilize the map in order to take control of the ship and remaining crew to save everyone from certain death."),
             scripting_1.addUserAction("Next.", function () {
                 scripting_1.setVariable("theStart", 1);
             })
@@ -447,19 +447,22 @@ var TransportBT = scripting_1.guard(function () { return scripting_1.getVariable
             // Goal options for the room -> Only showing these when the main help text is off. 
             scripting_1.selector([
                 scripting_1.guard(function () { return scripting_1.getVariable("TRANSPORT_ROOM:Broken") == 0; }, scripting_1.sequence([
-                    scripting_1.displayDescriptionAction("Oh No, the first thing broke. XYZ can fix it the best. But ABC is also a good person to ask for help"),
+                    scripting_1.displayDescriptionAction("There seems to be a problem with the teleporter software. Maybe Mark could check it out."),
                     scripting_1.action(function () { return true; }, function () {
                         scripting_1.setVariable("TRANSPORT_ROOM:Broken", 1);
                     }, 0)
                 ])),
                 scripting_1.guard(function () { return scripting_1.getVariable("TRANSPORT_ROOM:Broken") == 1; }, scripting_1.sequence([
-                    scripting_1.displayDescriptionAction("The first thing is still broken. Go find someone to fix it.")
-                ]))
+                    scripting_1.displayDescriptionAction("You need to find someone to look at the teleporter sofware."),
+                ])),
+                scripting_1.guard(function () { return scripting_1.getVariable("TRANSPORT_ROOM:Broken") == 2; }, scripting_1.sequence([
+                    scripting_1.displayDescriptionAction("The first thing was fixed, but now the second thing is broken? Go find EFG to fix the same."),
+                ])),
             ])
         ]))
         // Optional
         // displayDescriptionAction("Something seems to have gone wrong...")
-    ]),
+    ])
 ]));
 scripting_1.addUserInteractionTree(TransportBT);
 var EscapePodBT = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == ESCAPE_POD; }, scripting_1.sequence([
@@ -577,13 +580,13 @@ function render() {
     displayTextAndActions();
 }
 var mapPositions = {
-    "ENGINES": { x: 275, y: 110 },
+    "ENGINES": { x: 285, y: 108 },
     "COCKPIT": { x: 860, y: 230 },
-    "STORAGE": { x: 545, y: 110 },
+    "STORAGE": { x: 550, y: 106 },
     "DOCTORS OFFICE": { x: 725, y: 350 },
     "MAIN AREA": { x: 480, y: 240 },
     "ESCAPE POD": { x: 224, y: 408 },
-    "TRANSPORT ROOM": { x: 370, y: 360 },
+    "TRANSPORT ROOM": { x: 370, y: 358 },
     "MONITORING ROOM": { x: 535, y: 360 },
     "BATHROOM": { x: 85, y: 240 },
     "MALE BEDROOM": { x: 85, y: 330 },
