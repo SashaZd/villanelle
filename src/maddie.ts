@@ -284,59 +284,29 @@ let lastSeenByAgent = function(agent){
 	]);
 };
 
-
-// let findItem = action(
-//     () => getAgentVariable(Caleb, 'currentLocation') == getItemVariable(wires1, "currentLocation"),
-//     () => {
-//         console.log("Caleb found - Item: wires1")
-
-
-//         // console.log("hello");
-//         // console.log(getAgentVariable(Caleb, 'currentLocation') == getItemVariable(wires1, "currentLocation"));
-//         // displayDescriptionAction("Caleb found the wires1.")
-//     }, 
-//     0
-// );
-
-// let eatPlayer = action(() => getAgentVariable(Caleb, "currentLocation") == getVariable(playerLocation),
-//     () => {
-//         setVariable("endGame", "lose");
-//         setVariable(playerLocation, "NA");
-//     }, 0
-// );
-
-//this mess
-// let conversation = action(() => getAgentVariable(Caleb, "currentLocation") == getVariable(playerLocation),
-//     () => {
-//             displayDescriptionAction("You happen to run into Caleb."),
-//             displayDescriptionAction("Caleb: Have you not found the wires yet? Did you not check storage?"),
-//     },
-// );
-
-// let search = selector([
-//     findItem,
-//     sequence([
-//         selector([
-//             guard(setDestinationPrecond, {}, setNextDestination),
-//             action(() => true, () => {
-//             }, {}, 0)
-//         ]),
-//         gotoNextLocation,
-//         findItem
-//     ])
-// ]);
-
-let searchForAgent = function(agent: Agent){
-	let search = sequence([
-		selector([
-			guard(setDestinationPrecondForAgent(agent), setNextDestinationForAgent(agent)),
-			action(() => true, () => {
-			},0)
-		]),
-		gotoNextLocationForAgent(agent),
-	]);
-
-	return search
+let searchForAgent = function(agent: Agent, destination: string = "UNKNOWN"){
+	if(destination == "UNKNOWN"){
+		let search = sequence([
+			selector([
+				guard(setDestinationPrecondForAgent(agent), setNextDestinationForAgent(agent)),
+				action(() => true, () => {
+				},0)
+			]),
+			gotoNextLocationForAgent(agent),
+		]);	
+		return search
+	}
+	else{
+		let search = sequence([
+			selector([
+				guard(setDestinationPrecondForAgent(agent), setNextDestinationForAgent(agent, destination)),
+				action(() => true, () => {
+				},0)
+			]),
+			gotoNextLocationForAgent(agent),
+		]);	
+		return search
+	}
 }
 
 let CalebBT = sequence([
@@ -393,6 +363,7 @@ setVariable("CockpitStart",0);
 setVariable("MonitoringStart",0);
 setVariable("TransportStart",0);
 setVariable("EscapeStart",0);
+
 
 var MainBT = guard(() => getVariable(playerLocation) == MAIN_AREA,
     sequence([
@@ -756,6 +727,7 @@ var TransportBT = guard(
 			                    sequence([
 			                        displayDescriptionAction("There seems to be a problem with the teleporter software. Maybe a transport officer could check it out."),
 			                        action(() => true, ()=>{
+			                        	// Hint given: Ask Mark
 					            		setVariable("TRANSPORT_ROOM:Broken", 1);
 					            	}, 0)
 			                    ])
@@ -858,8 +830,8 @@ addUserInteractionTree(EscapePodBT);
 
 var FBedroomBT = guard(() => getVariable(playerLocation) == FEM_BEDROOM,
 	sequence([
-                      displayDescriptionAction("You move into the females' bedroom."),
-						addUserAction("Return to the bathroom.", () => setVariable(playerLocation, BATHROOM)),
+                    displayDescriptionAction("You move into the females' bedroom."),
+					addUserAction("Return to the bathroom.", () => setVariable(playerLocation, BATHROOM)),
                	// Optional
                 // displayDescriptionAction("Something seems to have gone wrong...")
             ]),
@@ -917,6 +889,43 @@ var wires2BT = guard(() => getVariable(playerLocation) == wires2.currentLocation
 		]
 	));
 addUserInteractionTree(wires2BT);
+
+let addGoalToAgent = function(goal, agent, destination) {
+	let newAgentTree = sequence([
+		lastSeenByAgent(agent),
+		sequence([
+			searchForAgent(agent, destination), lastSeenByAgent(agent)
+		])
+	]);
+	attachTreeToAgent(agent, newAgentTree);
+}
+
+
+let playerSeesAgent = function(agent) {
+	var playerSeesAgent = guard(() => getVariable(playerLocation) == agent.currentLocation,
+	    sequence([
+	    	displayDescriptionAction("You see "+agent.name),
+	    	guard(() => getVariable("TRANSPORT_ROOM:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to go fix the teleporter software.", () => addGoalToAgent("TRANSPORT_ROOM:Broken", agent, TRANSPORT_ROOM)),
+                ])
+            ),
+
+            // Add this (1)
+            guard(() => getVariable("ENGINE_ROOM:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to go fix the that other problem software.", () => addGoalToAgent("ENGINE_ROOM:Broken", agent, ENGINES)),
+                ])
+            ),
+		])
+	);
+	addUserInteractionTree(playerSeesAgent);
+}
+
+playerSeesAgent(Caleb)
+playerSeesAgent(Quinn)
+playerSeesAgent(Mark)
+playerSeesAgent(Beatrice)
 
 
 // //4. Run the world
