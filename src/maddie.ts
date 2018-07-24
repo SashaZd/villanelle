@@ -400,7 +400,7 @@ var MainBT = guard(() => getVariable(playerLocation) == MAIN_AREA,
             selector([
                 guard(() => getVariable("theStart") == 0,
                     sequence([
-                        displayDescriptionAction("It was a simple mission: land on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, their crewmates yelling at each other. There is only one escape pod remaining. As commander, you are equipped with a special ineractive map allowing you to see the positions of your crewmates at all times. You must utilize the map in order to take control of the ship and remaining crew to save everyone from certain death."),
+                        displayDescriptionAction("It was a simple mission: land on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Everything went awry during phase two. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed to have been lost in space. The commander comes to as the ship is plummeting from orbit, their crewmates yelling at each other. There is only one escape pod remaining. As commander, you are equipped with a special interactive map allowing you to see the positions of your crewmates at all times. You must utilize the map in order to take control of the ship and remaining crew to save everyone from certain death."),
                         addUserAction("Next.", () => {
                             setVariable("theStart", 1);
                             console.log("This is: ", getVariable(goal_broken_main))
@@ -539,7 +539,7 @@ var StorageBT = guard(() => getVariable(playerLocation) == STORAGE,
                	guard(() => getVariable("StorageStart") == 1,
                     sequence([
                        displayDescriptionAction("You moved into the storage room."),
-						addUserAction("Move into the engine room.", () => setVariable(playerLocation, ENGINES)),
+						addUserAction("Move west into the engine room.", () => setVariable(playerLocation, ENGINES)),
 						addUserAction("Return to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
                     ])),
                	selector([
@@ -580,7 +580,7 @@ var DrOfficeBT = guard(() => getVariable(playerLocation) == DOCTORS_OFFICE,
 			selector([
                 guard(() => getVariable("DrOfficeStart") == 0,
                     sequence([
-                        displayDescriptionAction("Dr. Quinn spends a lot of time in her office looking after patients. She puts all others above herself; she is constantly concerned with the well-being of her crewmates. The prospect of her patients dying still keeps her up at night, but her determination to save as many people as she can is what keeps her going."),
+                        displayDescriptionAction("Dr. Quinn spends a lot of time in her office looking after patients. She puts all others above herself; she is constantly concerned with the well-being of her crewmates. The prospect of her patients dying still keeps her up at night, but her determination to save as many people as she can is what keeps her going. Her maternal instincts follow her from her house to the ship."),
                         addUserAction("Next.", () => {
                             setVariable("DrOfficeStart", 1);
                             console.log("This is: ", getVariable(goal_broken_dr))
@@ -591,8 +591,8 @@ var DrOfficeBT = guard(() => getVariable(playerLocation) == DOCTORS_OFFICE,
                	guard(() => getVariable("DrOfficeStart") == 1,
                     sequence([
                        displayDescriptionAction("You enter the doctor's office."),
-						addUserAction("Move into the cockpit.", () => setVariable(playerLocation, COCKPIT)),
-						addUserAction("Go to the monitoring room.", () => setVariable(playerLocation, MONITORING_ROOM)),
+						addUserAction("Move northeast into the cockpit.", () => setVariable(playerLocation, COCKPIT)),
+						addUserAction("Go west into the monitoring room.", () => setVariable(playerLocation, MONITORING_ROOM)),
 						addUserAction("Return to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
                     ])),
                			selector([
@@ -644,7 +644,7 @@ var CockpitBT = guard(() => getVariable(playerLocation) == COCKPIT,
                	guard(() => getVariable("CockpitStart") == 1,
                     sequence([
                        displayDescriptionAction("You move forward into the cockpit."),
-						addUserAction("Move to the doctor's office.", () => setVariable(playerLocation, DOCTORS_OFFICE)),
+						addUserAction("Move southwest into the doctor's office.", () => setVariable(playerLocation, DOCTORS_OFFICE)),
 						addUserAction("Return to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
 		])),
 						selector([
@@ -693,8 +693,8 @@ var MonitoringBT = guard(() => getVariable(playerLocation) == MONITORING_ROOM,
                	guard(() => getVariable("MonitoringStart") == 1,
                     sequence([
                        displayDescriptionAction("You enter the monitoring room."),
-						addUserAction("Move to the doctor's office.", () => setVariable(playerLocation, DOCTORS_OFFICE)),
-						addUserAction("Go to the transport room.", () => setVariable(playerLocation, TRANSPORT_ROOM)),
+						addUserAction("Move east into the doctor's office.", () => setVariable(playerLocation, DOCTORS_OFFICE)),
+						addUserAction("Go west into the transport room.", () => setVariable(playerLocation, TRANSPORT_ROOM)),
 						addUserAction("Return to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
 			])),
                			selector([
@@ -736,7 +736,7 @@ var TransportBT = guard(
 			selector([
                 guard(() => getVariable("TransportStart") == 0,
                     sequence([
-                        displayDescriptionAction("Where the transporter is located and where the failure occurred. Mark often works in here. Mark is an older crewmate who avoids the spotlight like the plague. His anxiety levels shot up rapidly after the failure, and he is excessively worried that the rest of the crew blames the failure on him."),
+                        displayDescriptionAction("Where the transporter is located and where the failure occurred. Mark the transport officer often works in here. Mark is an older crewmate who avoids the spotlight like the plague. His anxiety levels shot up rapidly after the failure, and he is excessively worried that the rest of the crew blames the failure on him."),
                         addUserAction("Next.", () => {
                             setVariable("TransportStart", 1);
                             console.log("This is: ", getVariable(goal_broken_transport))
@@ -747,7 +747,7 @@ var TransportBT = guard(
                	guard(() => getVariable("TransportStart") == 1,
                     sequence([
                        	displayDescriptionAction("You enter the transport room where the teleporter is located."),
-						addUserAction("Move into the monitoring room.", () => setVariable(playerLocation, MONITORING_ROOM)),
+						addUserAction("Move east into the monitoring room.", () => setVariable(playerLocation, MONITORING_ROOM)),
 						addUserAction("Exit to the main area.", () => setVariable(playerLocation, MAIN_AREA)),
 
 						// Goal options for the room -> Only showing these when the main help text is off. 
@@ -787,7 +787,7 @@ var TransportBT = guard(
 			                ),
 			                guard(() => getVariable("TRANSPORT_ROOM:Broken") == 6,
 			                    sequence([
-			                        displayDescriptionAction("The teleporter software was restarted, but now it needs to be reconfigured."),
+			                        displayDescriptionAction("The teleporter software was restarted, but now it needs to be reconfigured to match the settings of the ship."),
 			                    ])
 			                ),
 			                guard(() => getVariable("TRANSPORT_ROOM:Broken") == 7,
@@ -851,8 +851,6 @@ var EscapePodBT = guard(() => getVariable(playerLocation) == ESCAPE_POD,
 			                    ])
 			                ),
 			        ]),
-            // Optional
-			displayDescriptionAction("Something seems to have gone wrong...")
         ]),
 	])
 );
@@ -860,75 +858,33 @@ addUserInteractionTree(EscapePodBT);
 
 var FBedroomBT = guard(() => getVariable(playerLocation) == FEM_BEDROOM,
 	sequence([
-			// selector([
-   //              guard(() => getVariable("theStart") == 0,
-   //                  sequence([
-   //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
-   //                      addUserAction("Next.", () => {
-   //                          setVariable("theStart", 1);
-   //                      })
-   //                  ])),
-
-   //             	guard(() => getVariable("theStart") == 1,
-   //                  sequence([
                       displayDescriptionAction("You move into the females' bedroom."),
 						addUserAction("Return to the bathroom.", () => setVariable(playerLocation, BATHROOM)),
-// ])),
-
                	// Optional
                 // displayDescriptionAction("Something seems to have gone wrong...")
             ]),
-		// ]
 		);
 addUserInteractionTree(FBedroomBT);
 
 var BathroomBT = guard(() => getVariable(playerLocation) == BATHROOM,
 	sequence([
-			// selector([
-   //              guard(() => getVariable("theStart") == 0,
-   //                  sequence([
-   //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
-   //                      addUserAction("Next.", () => {
-   //                          setVariable("theStart", 1);
-   //                      })
-   //                  ])),
-
-   //             	guard(() => getVariable("theStart") == 1,
-   //                  sequence([
-                      displayDescriptionAction("You move into the bathroom."),
-						addUserAction("Move south into the males' bedroom.", () => setVariable(playerLocation, MALE_BEDROOM)),
-						addUserAction("Move north into the females' bedroom.", () => setVariable(playerLocation, FEM_BEDROOM)),
-						addUserAction("Enter the main area.", () => setVariable(playerLocation, MAIN_AREA)),
-// ])),
-
+             		displayDescriptionAction("You move into the bathroom."),
+					addUserAction("Move south into the males' bedroom.", () => setVariable(playerLocation, MALE_BEDROOM)),
+					addUserAction("Move north into the females' bedroom.", () => setVariable(playerLocation, FEM_BEDROOM)),
+					addUserAction("Enter the main area.", () => setVariable(playerLocation, MAIN_AREA)),
                	// Optional
                 // displayDescriptionAction("Something seems to have gone wrong...")
             ]),
-		// ]
 		);
 addUserInteractionTree(BathroomBT);
 
 var MBedroomBT = guard(() => getVariable(playerLocation) == MALE_BEDROOM,
 	sequence([
-			// selector([
-   //              guard(() => getVariable("theStart") == 0,
-   //                  sequence([
-   //                      displayDescriptionAction("It was a simple mission: and on the newly-discovered planet Siguron, teleport crew members down to its surface, and secure and document new information. Part two was when everything went awry. As most of the crew gathered into the transport bay, the commander and a few others stayed behind to monitor the exploration. The teleportation process began, yet immediately a massive systems failure occurred. Those who had been awaiting teleportation were gone, assumed dead. The commander comes to as the ship is plummeting from orbit, his crewmates yelling at each other. There is only one escape pod remaining. You must take control of the ship and remaining crew to save everyone from certain death."),
-   //                      addUserAction("Next.", () => {
-   //                          setVariable("theStart", 1);
-   //                      })
-   //                  ])),
-
-   //             	guard(() => getVariable("theStart") == 1,
-   //                  sequence([
                       displayDescriptionAction("You move into the males' bedroom."),
 						addUserAction("Return to bathroom.", () => setVariable(playerLocation, BATHROOM)),
-// ])),
-
                	// Optional
                 // displayDescriptionAction("Something seems to have gone wrong...")
             ]),
-		// ]
 		);
 addUserInteractionTree(MBedroomBT);
 
