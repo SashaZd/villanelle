@@ -904,17 +904,45 @@ let addGoalToAgent = function(goal, agent, destination) {
 let playerSeesAgent = function(agent) {
 	var playerSeesAgent = guard(() => getVariable(playerLocation) == agent.currentLocation,
 	    sequence([
-	    	displayDescriptionAction("You see "+agent.name),
+	    	displayDescriptionAction("You see "+agent.name+"."),
 	    	guard(() => getVariable("TRANSPORT_ROOM:Broken") == 1,
                 sequence([
-                    addUserAction("Tell " + agent.name + " to go fix the teleporter software.", () => addGoalToAgent("TRANSPORT_ROOM:Broken", agent, TRANSPORT_ROOM)),
+                    addUserAction("Tell " + agent.name + " to inspect the teleporter software.", () => addGoalToAgent("TRANSPORT_ROOM:Broken", agent, TRANSPORT_ROOM)),
                 ])
             ),
-
-            // Add this (1)
             guard(() => getVariable("ENGINE_ROOM:Broken") == 1,
                 sequence([
-                    addUserAction("Tell " + agent.name + " to go fix the that other problem software.", () => addGoalToAgent("ENGINE_ROOM:Broken", agent, ENGINES)),
+                    addUserAction("Tell " + agent.name + " to find replacement wires for the engine.", () => addGoalToAgent("ENGINE_ROOM:Broken", agent, ENGINES)),
+                ])
+            ),
+            guard(() => getVariable("STORAGE:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to reorganize the storage room.", () => addGoalToAgent("STORAGE:Broken", agent, STORAGE)),
+                ])
+            ),
+            guard(() => getVariable("DR_OFFICE:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to check the health of the crew.", () => addGoalToAgent("DR_OFFICE:Broken", agent, DOCTORS_OFFICE)),
+                ])
+            ),
+            guard(() => getVariable("COCKPIT:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to contact a support ship.", () => addGoalToAgent("COCKPIT:Broken", agent, COCKPIT)),
+                ])
+            ),
+            guard(() => getVariable("MONITORING_ROOM:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to inspect the monitoring room.", () => addGoalToAgent("MONITORING_ROOM:Broken", agent, MONITORING_ROOM)),
+                ])
+            ),
+            guard(() => getVariable("MAIN_AREA:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to prepare food for the crew.", () => addGoalToAgent("MAIN_AREA:Broken", agent, MAIN_AREA)),
+                ])
+            ),
+            guard(() => getVariable("ESCAPE_POD:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to inspect the escape pod.", () => addGoalToAgent("ESCAPE_POD:Broken", agent, ESCAPE_POD)),
                 ])
             ),
 		])
