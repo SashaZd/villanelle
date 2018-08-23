@@ -253,6 +253,9 @@ export function getNextLocation(start: string, destination: string): string {
 export class Agent {
     currentLocation: string;
     destination: string;
+    currentBehaviorTree: Tick[];
+
+    // Specific to Maddie's game? Move to lib fn? 
     lastSeenItem: {[itemName: string]: string} = {};
     lastSeenPerson: {[itemName: string]: string} = {};
     randNumber: number = 0;
@@ -266,16 +269,32 @@ export class Agent {
         this.currentLocation = currentlocation;
     }
 
+    getNextLocation(){
+        return action(
+            () => true,
+            () => {
+                this.currentLocation = getNextLocation(this.currentLocation, this.destination);
+                console.log(this.name, " at: ", this.currentLocation);
+            },
+        0
+    );
+    }
+
+    setDestination(destination: string){
+        this.destination = destination;
+    }
+
+    setBehaviorTree(behaviorTree: Tick[]){
+        this.currentBehaviorTree = behaviorTree;
+    }
+
+    // Seems specific to Maddie's game? Move to a lib function?
     setLastSawItemAtLocation(item: Item, atLocation: string){
         this.lastSeenItem[item.name] = atLocation;
     }
 
     setLastSawPersonAtLocation(agentName: string, atLocation: string){
         this.lastSeenPerson[agentName] = atLocation;
-    }
-
-    setDestination(destination: string){
-        this.destination = destination;
     }
 
     hasSeenItem(item: Item){

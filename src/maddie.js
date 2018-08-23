@@ -137,31 +137,34 @@ function setNextDestinationForAgent(agent, destination) {
         return setNextDestination;
     }
     else {
-        var chooseENGINES = scripting_1.action(function () { return destination == ENGINES; }, function () { return agent.destination = ENGINES; }, 0);
-        var chooseSTORAGE = scripting_1.action(function () { return destination == STORAGE; }, function () { return agent.destination = STORAGE; }, 0);
-        var chooseDOCTORS_OFFICE = scripting_1.action(function () { return destination == DOCTORS_OFFICE; }, function () { return agent.destination = DOCTORS_OFFICE; }, 0);
-        var chooseCOCKPIT = scripting_1.action(function () { return destination == COCKPIT; }, function () { return agent.destination = COCKPIT; }, 0);
-        var chooseESCAPE_POD = scripting_1.action(function () { return destination == ESCAPE_POD; }, function () { return agent.destination = ESCAPE_POD; }, 0);
-        var chooseTRANSPORT_ROOM = scripting_1.action(function () { return destination == TRANSPORT_ROOM; }, function () { return agent.destination = TRANSPORT_ROOM; }, 0);
-        var chooseMONITORING_ROOM = scripting_1.action(function () { return destination == MONITORING_ROOM; }, function () { return agent.destination = MONITORING_ROOM; }, 0);
-        var chooseMAIN_AREA = scripting_1.action(function () { return destination == MAIN_AREA; }, function () { return agent.destination = MAIN_AREA; }, 0);
-        var chooseFEM_BEDROOM = scripting_1.action(function () { return destination == FEM_BEDROOM; }, function () { return agent.destination = FEM_BEDROOM; }, 0);
-        var chooseMALE_BEDROOM = scripting_1.action(function () { return destination == MALE_BEDROOM; }, function () { return agent.destination = MALE_BEDROOM; }, 0);
-        var chooseBATHROOM = scripting_1.action(function () { return destination == BATHROOM; }, function () { return agent.destination = BATHROOM; }, 0);
-        var setNextDestination = scripting_1.selector([
-            chooseENGINES,
-            chooseCOCKPIT,
-            chooseSTORAGE,
-            chooseDOCTORS_OFFICE,
-            chooseBATHROOM,
-            chooseMALE_BEDROOM,
-            chooseFEM_BEDROOM,
-            chooseMAIN_AREA,
-            chooseMONITORING_ROOM,
-            chooseTRANSPORT_ROOM,
-            chooseESCAPE_POD
+        return scripting_1.sequence([
+            scripting_1.action(function () { return true; }, function () { return agent.destination = destination; }, 0)
         ]);
-        return setNextDestination;
+        // let chooseENGINES = action(() => destination == ENGINES, () => agent.destination = ENGINES, 0);
+        // let chooseSTORAGE = action(() => destination == STORAGE, () => agent.destination = STORAGE, 0);
+        // let chooseDOCTORS_OFFICE = action(() => destination == DOCTORS_OFFICE, () => agent.destination = DOCTORS_OFFICE, 0);
+        // let chooseCOCKPIT = action(() => destination == COCKPIT, () => agent.destination = COCKPIT, 0);
+        // let chooseESCAPE_POD = action(() => destination == ESCAPE_POD, () => agent.destination = ESCAPE_POD, 0);
+        // let chooseTRANSPORT_ROOM = action(() => destination == TRANSPORT_ROOM, () => agent.destination = TRANSPORT_ROOM, 0);
+        // let chooseMONITORING_ROOM = action(() => destination == MONITORING_ROOM, () => agent.destination = MONITORING_ROOM, 0);
+        // let chooseMAIN_AREA = action(() => destination == MAIN_AREA, () => agent.destination = MAIN_AREA, 0);
+        // let chooseFEM_BEDROOM = action(() => destination == FEM_BEDROOM, () => agent.destination = FEM_BEDROOM, 0);
+        // let chooseMALE_BEDROOM = action(() => destination == MALE_BEDROOM, () => agent.destination = MALE_BEDROOM, 0);
+        // let chooseBATHROOM = action(() => destination == BATHROOM, () => agent.destination = BATHROOM, 0);
+        // let setNextDestination = selector([
+        // 	chooseENGINES,
+        // 	chooseCOCKPIT,
+        // 	chooseSTORAGE,
+        // 	chooseDOCTORS_OFFICE,
+        // 	chooseBATHROOM,
+        // 	chooseMALE_BEDROOM,
+        // 	chooseFEM_BEDROOM,
+        // 	chooseMAIN_AREA,
+        // 	chooseMONITORING_ROOM,
+        // 	chooseTRANSPORT_ROOM,
+        // 	chooseESCAPE_POD
+        // ]);
+        // return setNextDestination;
     }
 }
 var setDestinationPrecondForAgent = function (agent) {
@@ -169,12 +172,17 @@ var setDestinationPrecondForAgent = function (agent) {
     return setDestinationPrecond;
 };
 // // create behavior trees
-var gotoNextLocationForAgent = function (agent) {
-    return scripting_1.action(function () { return true; }, function () {
-        agent.currentLocation = scripting_1.getNextLocation(agent.currentLocation, agent.destination);
-        console.log(agent, " at: ", agent.currentLocation);
-    }, 0);
-};
+// let gotoNextLocationForAgent = function(agent: Agent){
+// 	return agent.getNextLocation()
+// 	// return  action(
+// 	// 	() => true,
+// 	// 	() => {
+// 	// 		agent.currentLocation = getNextLocation(agent.currentLocation, agent.destination);
+// 	// 		console.log(agent, " at: ", agent.currentLocation);
+// 	// 	},
+// 	// 	0
+// 	// );
+// }
 var lastSeenByAgent = function (agent) {
     return scripting_1.sequence([
         scripting_1.selector([
@@ -228,16 +236,34 @@ var lastSeenByAgent = function (agent) {
         ])
     ]);
 };
-var searchForAgent = function (agent) {
-    var search = scripting_1.sequence([
-        scripting_1.selector([
-            scripting_1.guard(setDestinationPrecondForAgent(agent), setNextDestinationForAgent(agent)),
-            scripting_1.action(function () { return true; }, function () {
-            }, 0)
-        ]),
-        gotoNextLocationForAgent(agent),
-    ]);
-    return search;
+// Todo: Has to be a better way to return a behaviour tree to go to the next destination for an agent. 
+// Todo: Move to scripting under Agent instead. 
+var searchForAgent = function (agent, destination) {
+    if (destination === void 0) { destination = "UNKNOWN"; }
+    if (destination == "UNKNOWN") {
+        var search = scripting_1.sequence([
+            scripting_1.selector([
+                scripting_1.guard(setDestinationPrecondForAgent(agent), setNextDestinationForAgent(agent)),
+                scripting_1.action(function () { return true; }, function () {
+                }, 0)
+            ]),
+            agent.getNextLocation()
+            // gotoNextLocationForAgent(agent),
+        ]);
+        return search;
+    }
+    else {
+        var search = scripting_1.sequence([
+            scripting_1.selector([
+                scripting_1.guard(setDestinationPrecondForAgent(agent), setNextDestinationForAgent(agent, destination)),
+                scripting_1.action(function () { return true; }, function () {
+                }, 0)
+            ]),
+            agent.getNextLocation()
+            // gotoNextLocationForAgent(agent),
+        ]);
+        return search;
+    }
 };
 var CalebBT = scripting_1.sequence([
     lastSeenByAgent(Caleb),
@@ -650,17 +676,24 @@ scripting_1.sequence([
     })
 ]));
 scripting_1.addUserInteractionTree(wires2BT);
-var addGoalToAgent = function (goal, agent) {
-    if (goal == "TRANSPORT_ROOM:Broken") {
-        setNextDestinationForAgent(agent, TRANSPORT_ROOM);
-        console.log(agent.name + " got a goal: " + goal + " | moving to: " + TRANSPORT_ROOM);
-    }
+var addGoalToAgent = function (goal, agent, destination) {
+    var newAgentTree = scripting_1.sequence([
+        lastSeenByAgent(agent),
+        scripting_1.sequence([
+            searchForAgent(agent, destination), lastSeenByAgent(agent)
+        ])
+    ]);
+    scripting_1.attachTreeToAgent(agent, newAgentTree);
 };
 var playerSeesAgent = function (agent) {
     var playerSeesAgent = scripting_1.guard(function () { return scripting_1.getVariable(playerLocation) == agent.currentLocation; }, scripting_1.sequence([
         scripting_1.displayDescriptionAction("You see " + agent.name),
         scripting_1.guard(function () { return scripting_1.getVariable("TRANSPORT_ROOM:Broken") == 1; }, scripting_1.sequence([
-            scripting_1.addUserAction("Tell " + agent.name + " to go fix the teleporter software.", function () { return addGoalToAgent("TRANSPORT_ROOM:Broken", agent); }),
+            scripting_1.addUserAction("Tell " + agent.name + " to go fix the teleporter software.", function () { return addGoalToAgent("TRANSPORT_ROOM:Broken", agent, TRANSPORT_ROOM); }),
+        ])),
+        // Add this (1)
+        scripting_1.guard(function () { return scripting_1.getVariable("ENGINE_ROOM:Broken") == 1; }, scripting_1.sequence([
+            scripting_1.addUserAction("Tell " + agent.name + " to go fix the that other problem software.", function () { return addGoalToAgent("ENGINE_ROOM:Broken", agent, ENGINES); }),
         ])),
     ]));
     scripting_1.addUserInteractionTree(playerSeesAgent);
@@ -668,6 +701,7 @@ var playerSeesAgent = function (agent) {
 playerSeesAgent(Caleb);
 playerSeesAgent(Quinn);
 playerSeesAgent(Mark);
+playerSeesAgent(Beatrice);
 // //4. Run the world
 scripting_1.initialize();
 var userInteractionObject = scripting_1.getUserInteractionObject();

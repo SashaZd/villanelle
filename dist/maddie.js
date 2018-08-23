@@ -156,6 +156,8 @@ var setDestinationPrecondForAgent = function (agent) {
     var setDestinationPrecond = function () { return util_1.isUndefined(agent.destination) || agent.destination == agent.currentLocation; };
     return setDestinationPrecond;
 };
+
+
 // // create behavior trees
 var gotoNextLocationForAgent = function (agent) {
     return scripting_1.action(function () { return true; }, function () {
@@ -163,6 +165,8 @@ var gotoNextLocationForAgent = function (agent) {
         console.log(agent, " at: ", agent.currentLocation);
     }, 0);
 };
+
+
 var lastSeenByAgent = function (agent) {
     return scripting_1.sequence([
         scripting_1.selector([

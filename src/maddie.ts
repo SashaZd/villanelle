@@ -174,34 +174,38 @@ function setNextDestinationForAgent(agent: Agent, destination: string = "UNKNOWN
 
 	}
 	else{
-		let chooseENGINES = action(() => destination == ENGINES, () => agent.destination = ENGINES, 0);
-		let chooseSTORAGE = action(() => destination == STORAGE, () => agent.destination = STORAGE, 0);
-		let chooseDOCTORS_OFFICE = action(() => destination == DOCTORS_OFFICE, () => agent.destination = DOCTORS_OFFICE, 0);
-		let chooseCOCKPIT = action(() => destination == COCKPIT, () => agent.destination = COCKPIT, 0);
-		let chooseESCAPE_POD = action(() => destination == ESCAPE_POD, () => agent.destination = ESCAPE_POD, 0);
-		let chooseTRANSPORT_ROOM = action(() => destination == TRANSPORT_ROOM, () => agent.destination = TRANSPORT_ROOM, 0);
-		let chooseMONITORING_ROOM = action(() => destination == MONITORING_ROOM, () => agent.destination = MONITORING_ROOM, 0);
-		let chooseMAIN_AREA = action(() => destination == MAIN_AREA, () => agent.destination = MAIN_AREA, 0);
-		let chooseFEM_BEDROOM = action(() => destination == FEM_BEDROOM, () => agent.destination = FEM_BEDROOM, 0);
-		let chooseMALE_BEDROOM = action(() => destination == MALE_BEDROOM, () => agent.destination = MALE_BEDROOM, 0);
-		let chooseBATHROOM = action(() => destination == BATHROOM, () => agent.destination = BATHROOM, 0);
-
-
-		let setNextDestination = selector([
-			chooseENGINES,
-			chooseCOCKPIT,
-			chooseSTORAGE,
-			chooseDOCTORS_OFFICE,
-			chooseBATHROOM,
-			chooseMALE_BEDROOM,
-			chooseFEM_BEDROOM,
-			chooseMAIN_AREA,
-			chooseMONITORING_ROOM,
-			chooseTRANSPORT_ROOM,
-			chooseESCAPE_POD
+		return sequence([
+			action(() => true, () => agent.destination = destination, 0)
 		]);
 
-		return setNextDestination;
+		// let chooseENGINES = action(() => destination == ENGINES, () => agent.destination = ENGINES, 0);
+		// let chooseSTORAGE = action(() => destination == STORAGE, () => agent.destination = STORAGE, 0);
+		// let chooseDOCTORS_OFFICE = action(() => destination == DOCTORS_OFFICE, () => agent.destination = DOCTORS_OFFICE, 0);
+		// let chooseCOCKPIT = action(() => destination == COCKPIT, () => agent.destination = COCKPIT, 0);
+		// let chooseESCAPE_POD = action(() => destination == ESCAPE_POD, () => agent.destination = ESCAPE_POD, 0);
+		// let chooseTRANSPORT_ROOM = action(() => destination == TRANSPORT_ROOM, () => agent.destination = TRANSPORT_ROOM, 0);
+		// let chooseMONITORING_ROOM = action(() => destination == MONITORING_ROOM, () => agent.destination = MONITORING_ROOM, 0);
+		// let chooseMAIN_AREA = action(() => destination == MAIN_AREA, () => agent.destination = MAIN_AREA, 0);
+		// let chooseFEM_BEDROOM = action(() => destination == FEM_BEDROOM, () => agent.destination = FEM_BEDROOM, 0);
+		// let chooseMALE_BEDROOM = action(() => destination == MALE_BEDROOM, () => agent.destination = MALE_BEDROOM, 0);
+		// let chooseBATHROOM = action(() => destination == BATHROOM, () => agent.destination = BATHROOM, 0);
+
+
+		// let setNextDestination = selector([
+		// 	chooseENGINES,
+		// 	chooseCOCKPIT,
+		// 	chooseSTORAGE,
+		// 	chooseDOCTORS_OFFICE,
+		// 	chooseBATHROOM,
+		// 	chooseMALE_BEDROOM,
+		// 	chooseFEM_BEDROOM,
+		// 	chooseMAIN_AREA,
+		// 	chooseMONITORING_ROOM,
+		// 	chooseTRANSPORT_ROOM,
+		// 	chooseESCAPE_POD
+		// ]);
+
+		// return setNextDestination;
 	}
 
 }
@@ -215,16 +219,18 @@ let setDestinationPrecondForAgent = function(agent: Agent){
 // // create behavior trees
 
 
-let gotoNextLocationForAgent = function(agent: Agent){
-	return  action(
-		() => true,
-		() => {
-			agent.currentLocation = getNextLocation(agent.currentLocation, agent.destination);
-			console.log(agent, " at: ", agent.currentLocation);
-		},
-		0
-	);
-}
+// let gotoNextLocationForAgent = function(agent: Agent){
+// 	return agent.getNextLocation()
+
+// 	// return  action(
+// 	// 	() => true,
+// 	// 	() => {
+// 	// 		agent.currentLocation = getNextLocation(agent.currentLocation, agent.destination);
+// 	// 		console.log(agent, " at: ", agent.currentLocation);
+// 	// 	},
+// 	// 	0
+// 	// );
+// }
 
 
 let lastSeenByAgent = function(agent){
@@ -284,6 +290,10 @@ let lastSeenByAgent = function(agent){
 	]);
 };
 
+
+// Todo: Has to be a better way to return a behaviour tree to go to the next destination for an agent. 
+// Todo: Move to scripting under Agent instead. 
+
 let searchForAgent = function(agent: Agent, destination: string = "UNKNOWN"){
 	if(destination == "UNKNOWN"){
 		let search = sequence([
@@ -292,7 +302,8 @@ let searchForAgent = function(agent: Agent, destination: string = "UNKNOWN"){
 				action(() => true, () => {
 				},0)
 			]),
-			gotoNextLocationForAgent(agent),
+			agent.getNextLocation()
+			// gotoNextLocationForAgent(agent),
 		]);	
 		return search
 	}
@@ -303,7 +314,8 @@ let searchForAgent = function(agent: Agent, destination: string = "UNKNOWN"){
 				action(() => true, () => {
 				},0)
 			]),
-			gotoNextLocationForAgent(agent),
+			agent.getNextLocation()
+			// gotoNextLocationForAgent(agent),
 		]);	
 		return search
 	}

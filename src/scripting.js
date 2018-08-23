@@ -211,6 +211,7 @@ exports.getNextLocation = getNextLocation;
 var Agent = /** @class */ (function () {
     function Agent(name) {
         this.name = name;
+        // Specific to Maddie's game? Move to lib fn? 
         this.lastSeenItem = {};
         this.lastSeenPerson = {};
         this.randNumber = 0;
@@ -220,14 +221,25 @@ var Agent = /** @class */ (function () {
     Agent.prototype.setCurrentLocation = function (currentlocation) {
         this.currentLocation = currentlocation;
     };
+    Agent.prototype.getNextLocation = function () {
+        var _this = this;
+        return action(function () { return true; }, function () {
+            _this.currentLocation = getNextLocation(_this.currentLocation, _this.destination);
+            console.log(_this.name, " at: ", _this.currentLocation);
+        }, 0);
+    };
+    Agent.prototype.setDestination = function (destination) {
+        this.destination = destination;
+    };
+    Agent.prototype.setBehaviorTree = function (behaviorTree) {
+        this.currentBehaviorTree = behaviorTree;
+    };
+    // Seems specific to Maddie's game? Move to a lib function?
     Agent.prototype.setLastSawItemAtLocation = function (item, atLocation) {
         this.lastSeenItem[item.name] = atLocation;
     };
     Agent.prototype.setLastSawPersonAtLocation = function (agentName, atLocation) {
         this.lastSeenPerson[agentName] = atLocation;
-    };
-    Agent.prototype.setDestination = function (destination) {
-        this.destination = destination;
     };
     Agent.prototype.hasSeenItem = function (item) {
         if (item.name in this.lastSeenItem) {
