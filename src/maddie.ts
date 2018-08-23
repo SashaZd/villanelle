@@ -407,6 +407,7 @@ var MainBT = guard(() => getVariable(playerLocation) == MAIN_AREA,
 			            	guard(() => getVariable("MAIN_ROOM:Broken") == 0,
 			                    sequence([
 			                        displayDescriptionAction("It has been hours since the crew last ate. The resident ship mom could help prepare some food."),
+			                        // Quinn
 			                        action(() => true, ()=>{
 					            		setVariable("MAIN_ROOM:Broken", 1);
 					            	}, 0)
@@ -420,6 +421,7 @@ var MainBT = guard(() => getVariable(playerLocation) == MAIN_AREA,
 			                guard(() => getVariable("MAIN_ROOM:Broken") == 2,
 			                    sequence([
 			                        displayDescriptionAction("The crew was able to eat, but the kitchen was left a mess. Someone needs to clean it."),
+			                    // Quinn or Eddie
 			                    ])
 			                ),
 			                guard(() => getVariable("MAIN_ROOM:Broken") == 3,
@@ -458,6 +460,7 @@ var EngineBT = guard(() => getVariable(playerLocation) == ENGINES,
 			            	guard(() => getVariable("ENGINES:Broken") == 0,
 			                    sequence([
 			                        displayDescriptionAction("In order to fix the engines, replacement wires must be found. An engineer or janitor should know where they are."),
+			                        // Beatrice or Eddie
 			                        action(() => true, ()=>{
 					            		setVariable("ENGINES:Broken", 1);
 					            	}, 0)
@@ -471,6 +474,7 @@ var EngineBT = guard(() => getVariable(playerLocation) == ENGINES,
 			                guard(() => getVariable("ENGINES:Broken") == 2,
 			                    sequence([
 			                        displayDescriptionAction("The wires were found, but the tool box seems to be missing. Caleb might have taken it."),
+			                    // Beatrice or Caleb
 			                    ])
 			                ),
 			                 guard(() => getVariable("ENGINES:Broken") == 3,
@@ -481,6 +485,7 @@ var EngineBT = guard(() => getVariable(playerLocation) == ENGINES,
 			                 guard(() => getVariable("ENGINES:Broken") == 4,
 			                    sequence([
 			                        displayDescriptionAction("With box acquired, the wires can now be replaced. An engineer should know how to do it."),
+			                    // Beatrice
 			                    ])
 			                ),
 			                 guard(() => getVariable("ENGINES:Broken") == 5,
@@ -491,11 +496,12 @@ var EngineBT = guard(() => getVariable(playerLocation) == ENGINES,
 			                 guard(() => getVariable("ENGINES:Broken") == 6,
 			                    sequence([
 			                        displayDescriptionAction("The engine's now fixed, but it still needs to be restarted."),
+			                    // Beatrice
 			                    ])
 			                ),
 			                 guard(() => getVariable("ENGINES:Broken") == 7,
 			                    sequence([
-			                        displayDescriptionAction("You need to find someone to restart the teleporter."),
+			                        displayDescriptionAction("You need to find someone to restart the engine."),
 			                    ])
 			                ),
 			            ]),    
@@ -529,6 +535,7 @@ var StorageBT = guard(() => getVariable(playerLocation) == STORAGE,
 			            	guard(() => getVariable("STORAGE:Broken") == 0,
 			                    sequence([
 			                        displayDescriptionAction("The storage room is a mess. A janitor would be able to make sense of it all."),
+			                        // Eddie
 			                        action(() => true, ()=>{
 					            		setVariable("STORAGE:Broken", 1);
 					            	}, 0)
@@ -542,6 +549,7 @@ var StorageBT = guard(() => getVariable(playerLocation) == STORAGE,
 			                guard(() => getVariable("STORAGE:Broken") == 2,
 			                    sequence([
 			                        displayDescriptionAction("Now that the storage room is clean, the replacement wires can by found."),
+			                    //Beatrice or Eddie
 			                    ])
 			                ),
 			                guard(() => getVariable("STORAGE:Broken") == 3,
@@ -582,6 +590,7 @@ var DrOfficeBT = guard(() => getVariable(playerLocation) == DOCTORS_OFFICE,
 			            	guard(() => getVariable("DR_OFFICE:Broken") == 0,
 			                    sequence([
 			                        displayDescriptionAction("Some crewmates may have sustained injuries. Find the doctor."),
+			                        // Quinn
 			                        action(() => true, ()=>{
 					            		setVariable("DR_OFFICE:Broken", 1);
 					            	}, 0)
@@ -595,6 +604,7 @@ var DrOfficeBT = guard(() => getVariable(playerLocation) == DOCTORS_OFFICE,
 			                guard(() => getVariable("DR_OFFICE:Broken") == 2,
 			                    sequence([
 			                        displayDescriptionAction("Some minor injuries were sustained. Find the doctor to heal the crew's injuries."),
+			                    // Quinn
 			                    ])
 			                ),
 			                guard(() => getVariable("DR_OFFICE:Broken") == 3,
@@ -634,6 +644,7 @@ var CockpitBT = guard(() => getVariable(playerLocation) == COCKPIT,
 			            	guard(() => getVariable("COCKPIT:Broken") == 0,
 			                    sequence([
 			                        displayDescriptionAction("Now that the ship is back online, you will need to contact a support ship. An officer would be perfect for the job."),
+			                        // Caleb
 			                        action(() => true, ()=>{
 					            		setVariable("COCKPIT:Broken", 1);
 					            	}, 0)
@@ -647,6 +658,7 @@ var CockpitBT = guard(() => getVariable(playerLocation) == COCKPIT,
 			                guard(() => getVariable("COCKPIT:Broken") == 2,
 			                    sequence([
 			                        displayDescriptionAction("A support ship has now been contacted, but the ship must get ready to be moved."),
+			                    // Caleb
 			                    ])
 			                ),
 			                guard(() => getVariable("COCKPIT:Broken") == 3,
@@ -684,6 +696,7 @@ var MonitoringBT = guard(() => getVariable(playerLocation) == MONITORING_ROOM,
 			            	guard(() => getVariable("MONITORING_ROOM:Broken") == 0,
 			                    sequence([
 			                        displayDescriptionAction("The monitoring room needs to be inspected to note any malfunctions."),
+			                        // Caleb or Mark
 			                        action(() => true, ()=>{
 					            		setVariable("MONITORING_ROOM:Broken", 1);
 					            	}, 0)
@@ -697,6 +710,7 @@ var MonitoringBT = guard(() => getVariable(playerLocation) == MONITORING_ROOM,
 			                guard(() => getVariable("MONITORING_ROOM:Broken") == 2,
 			                    sequence([
 			                        displayDescriptionAction("Nothing is wrong in the monitoring room, but some broken shards flew in from the adjacent room. A janitor would have it cleaned up in no time."),
+			                    // Eddie
 			                    ])
 			                ),
 			                guard(() => getVariable("MONITORING_ROOM:Broken") == 3,
@@ -739,7 +753,7 @@ var TransportBT = guard(
 			                    sequence([
 			                        displayDescriptionAction("There seems to be a problem with the teleporter software. Maybe a transport officer could check it out."),
 			                        action(() => true, ()=>{
-			                        	// Hint given: Ask Mark
+			                        	//Mark
 					            		setVariable("TRANSPORT_ROOM:Broken", 1);
 					            	}, 0)
 			                    ])
@@ -752,6 +766,7 @@ var TransportBT = guard(
 			                guard(() => getVariable("TRANSPORT_ROOM:Broken") == 2,
 			                    sequence([
 			                        displayDescriptionAction("The software was looked over, but before it can be restarted, the room must be cleaned. Sounds like a janitor's job."),
+			                    // Eddie
 			                    ])
 			                ),
 			                guard(() => getVariable("TRANSPORT_ROOM:Broken") == 3,
@@ -762,6 +777,7 @@ var TransportBT = guard(
 			                guard(() => getVariable("TRANSPORT_ROOM:Broken") == 4,
 			                    sequence([
 			                        displayDescriptionAction("The room is cleaned, so now the teleporter software can be restarted."),
+			                    // Mark
 			                    ])
 			                ),
 			                guard(() => getVariable("TRANSPORT_ROOM:Broken") == 5,
@@ -772,6 +788,7 @@ var TransportBT = guard(
 			                guard(() => getVariable("TRANSPORT_ROOM:Broken") == 6,
 			                    sequence([
 			                        displayDescriptionAction("The teleporter software was restarted, but now it needs to be reconfigured to match the settings of the ship."),
+			                    // Mark
 			                    ])
 			                ),
 			                guard(() => getVariable("TRANSPORT_ROOM:Broken") == 7,
@@ -782,6 +799,7 @@ var TransportBT = guard(
 			                guard(() => getVariable("TRANSPORT_ROOM:Broken") == 8,
 			                    sequence([
 			                        displayDescriptionAction("The teleporter software is now good to go, so all that is left is to restart the teleporter itself."),
+			                    // Mark
 			                    ])
 			                ),
 			                guard(() => getVariable("TRANSPORT_ROOM:Broken") == 9,
@@ -824,6 +842,7 @@ var EscapePodBT = guard(() => getVariable(playerLocation) == ESCAPE_POD,
 			            	guard(() => getVariable("ESCAPE_POD:Broken") == 0,
 			                    sequence([
 			                        displayDescriptionAction("The escape pod needs to be inspected for signs of malfunctions."),
+			                        // Caleb
 			                        action(() => true, ()=>{
 					            		setVariable("ESCAPE_POD:Broken", 1);
 					            	}, 0)
@@ -916,19 +935,107 @@ let addGoalToAgent = function(goal, agent, destination) {
 let playerSeesAgent = function(agent) {
 	var playerSeesAgent = guard(() => getVariable(playerLocation) == agent.currentLocation,
 	    sequence([
-	    	displayDescriptionAction("You see "+agent.name),
+	    	displayDescriptionAction("You see "+agent.name+"."),
 	    	guard(() => getVariable("TRANSPORT_ROOM:Broken") == 1,
                 sequence([
-                    addUserAction("Tell " + agent.name + " to go fix the teleporter software.", () => addGoalToAgent("TRANSPORT_ROOM:Broken", agent, TRANSPORT_ROOM)),
+                    addUserAction("Tell " + agent.name + " to inspect the teleporter software.", () => addGoalToAgent("TRANSPORT_ROOM:Broken", agent, TRANSPORT_ROOM)),
                 ])
             ),
-
-            // Add this (1)
             guard(() => getVariable("ENGINE_ROOM:Broken") == 1,
                 sequence([
-                    addUserAction("Tell " + agent.name + " to go fix the that other problem software.", () => addGoalToAgent("ENGINE_ROOM:Broken", agent, ENGINES)),
+                    addUserAction("Tell " + agent.name + " to find replacement wires for the engine.", () => addGoalToAgent("ENGINE_ROOM:Broken", agent, ENGINES)),
                 ])
             ),
+            guard(() => getVariable("STORAGE:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to reorganize the storage room.", () => addGoalToAgent("STORAGE:Broken", agent, STORAGE)),
+                ])
+            ),
+            guard(() => getVariable("DR_OFFICE:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to check the health of the crew.", () => addGoalToAgent("DR_OFFICE:Broken", agent, DOCTORS_OFFICE)),
+                ])
+            ),
+            guard(() => getVariable("COCKPIT:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to contact a support ship.", () => addGoalToAgent("COCKPIT:Broken", agent, COCKPIT)),
+                ])
+            ),
+            guard(() => getVariable("MONITORING_ROOM:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to inspect the monitoring room.", () => addGoalToAgent("MONITORING_ROOM:Broken", agent, MONITORING_ROOM)),
+                ])
+            ),
+            guard(() => getVariable("MAIN_AREA:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to prepare food for the crew.", () => addGoalToAgent("MAIN_AREA:Broken", agent, MAIN_AREA)),
+                ])
+            ),
+            guard(() => getVariable("ESCAPE_POD:Broken") == 1,
+                sequence([
+                    addUserAction("Tell " + agent.name + " to inspect the escape pod.", () => addGoalToAgent("ESCAPE_POD:Broken", agent, ESCAPE_POD)),
+                ])
+            ),
+            //  guard(() => getVariable("TRANSPORT_ROOM:Broken") == 3,
+            //     sequence([
+            //         addUserAction("Tell " + agent.name + " to clean the transport room.", () => addGoalToAgent("TRANSPORT_ROOM:Broken", agent, TRANSPORT_ROOM)),
+            //     ])
+            // ), 
+            //  guard(() => getVariable("ENGINE_ROOM:Broken") == 3,
+            //     sequence([
+            //         addUserAction("Tell " + agent.name + " to find a tool kit.", () => addGoalToAgent("ENGINE_ROOM:Broken", agent, ENGINES)),
+            //     ])
+            // ),
+            //  guard(() => getVariable("STORAGE:Broken") == 3,
+            //     sequence([
+            //         addUserAction("Tell " + agent.name + " to retrieve the replacement wires", () => addGoalToAgent("STORAGE:Broken", agent, STORAGE)),
+            //     ])
+            // ),
+            //  guard(() => getVariable("DR_OFFICE:Broken") == 3,
+            //     sequence([
+            //         addUserAction("Tell " + agent.name + " to heal the crew's injuries.", () => addGoalToAgent("DR_OFFICE:Broken", agent, DOCTORS_OFFICE)),
+            //     ])
+            // ),
+            //  guard(() => getVariable("COCKPIT:Broken") == 3,
+            //     sequence([
+            //         addUserAction("Tell " + agent.name + " to prepare the ship to move.", () => addGoalToAgent("COCKPIT:Broken", agent, COCKPIT)),
+            //     ])
+            // ),
+            //  guard(() => getVariable("MONITORING_ROOM:Broken") == 3,
+            //     sequence([
+            //         addUserAction("Tell " + agent.name + " to clean the monitoring room.", () => addGoalToAgent("MONITORING_ROOM:Broken", agent, MONITORING_ROOM)),
+            //     ])
+            // ),
+            //  guard(() => getVariable("MAIN_AREA:Broken") == 3,
+            //     sequence([
+            //         addUserAction("Tell " + agent.name + " to clean the kitchen.", () => addGoalToAgent("MAIN_AREA:Broken", agent, MAIN_AREA)),
+            //     ])
+            // ),
+            // guard(() => getVariable("TRANSPORT_ROOM:Broken") == 5,
+            //     sequence([
+            //         addUserAction("Tell " + agent.name + " to restart the teleporter software.", () => addGoalToAgent("TRANSPORT_ROOM:Broken", agent, TRANSPORT_ROOM)),
+            //     ])
+            // ), 
+            //  guard(() => getVariable("ENGINE_ROOM:Broken") == 5,
+            //     sequence([
+            //         addUserAction("Tell " + agent.name + " to find the wires.", () => addGoalToAgent("ENGINE_ROOM:Broken", agent, ENGINES)),
+            //     ])
+            // ), 
+            // guard(() => getVariable("TRANSPORT_ROOM:Broken") == 7,
+            //     sequence([
+            //         addUserAction("Tell " + agent.name + " to reconfigure the teleporter software.", () => addGoalToAgent("TRANSPORT_ROOM:Broken", agent, TRANSPORT_ROOM)),
+            //     ])
+            // ), 
+            //  guard(() => getVariable("ENGINE_ROOM:Broken") == 7,
+            //     sequence([
+            //         addUserAction("Tell " + agent.name + " to restart the engine.", () => addGoalToAgent("ENGINE_ROOM:Broken", agent, ENGINES)),
+            //     ])
+            // ),
+             // guard(() => getVariable("TRANSPORT_ROOM:Broken") == 9,
+            //     sequence([
+            //         addUserAction("Tell " + agent.name + " to reconfigure the teleporter.", () => addGoalToAgent("TRANSPORT_ROOM:Broken", agent, TRANSPORT_ROOM)),
+            //     ])
+            // ), 
 		])
 	);
 	addUserInteractionTree(playerSeesAgent);
